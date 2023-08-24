@@ -23,7 +23,7 @@
   <meta name="description" content="这篇文章主要介绍数据库的设计过程，包括E-R模型和各类范式。如有错漏敬请指正。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库系统概念（part3）">
-<meta property="og:url" content="https://hli5ky.top/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/index.html">
+<meta property="og:url" content="https://hli5ky.top/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/index.html">
 <meta property="og:site_name" content="白玉楼">
 <meta property="og:description" content="这篇文章主要介绍数据库的设计过程，包括E-R模型和各类范式。如有错漏敬请指正。">
 <meta property="og:locale" content="zh_CN">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://hli5ky.top/image_md/complex_attributes.png">
 
-<link rel="canonical" href="https://hli5ky.top/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/">
+<link rel="canonical" href="https://hli5ky.top/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -179,7 +179,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/holo.jpg">
@@ -241,8 +241,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -649,10 +649,13 @@ E-R图还提供了一种更复杂的约束映射关系的方法。即在线段�
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part2%EF%BC%89/" rel="prev" title="数据库系统概念（part2）">
+    <a href="/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part2%EF%BC%89/" rel="prev" title="数据库系统概念（part2）">
       <i class="fa fa-chevron-left"></i> 数据库系统概念（part2）
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/0824-%E6%89%8B%E5%8A%A8%E6%8C%A1%E6%B1%BD%E8%BD%A6%E6%8D%A2%E6%8C%A1%E5%8E%9F%E5%88%99/" rel="next" title="手动挡汽车换挡原则及简单原理">
+      手动挡汽车换挡原则及简单原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -728,20 +731,20 @@ E-R图还提供了一种更复杂的约束映射关系的方法。即在线段�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

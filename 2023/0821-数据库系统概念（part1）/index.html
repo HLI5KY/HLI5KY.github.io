@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"hli5ky.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="这是站点完善过程的记录（O.O）。">
+  <meta name="description" content="这篇笔记主要介绍数据库系统的基本定义和基本构成。如有错漏敬请指正。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="blog进化记录（更新中）">
-<meta property="og:url" content="https://hli5ky.top/2023/08/20/blog%E7%BE%8E%E5%8C%96%E8%AE%B0%E5%BD%95%EF%BC%88%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/index.html">
+<meta property="og:title" content="数据库系统概念（part1）">
+<meta property="og:url" content="https://hli5ky.top/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part1%EF%BC%89/index.html">
 <meta property="og:site_name" content="白玉楼">
-<meta property="og:description" content="这是站点完善过程的记录（O.O）。">
+<meta property="og:description" content="这篇笔记主要介绍数据库系统的基本定义和基本构成。如有错漏敬请指正。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-20T11:03:12.000Z">
-<meta property="article:modified_time" content="2023-08-21T16:05:48.459Z">
+<meta property="article:published_time" content="2023-08-21T14:57:14.000Z">
+<meta property="article:modified_time" content="2023-08-21T15:56:14.067Z">
 <meta property="article:author" content="HLI5KY">
-<meta property="article:tag" content="站点建设">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://hli5ky.top/2023/08/20/blog%E7%BE%8E%E5%8C%96%E8%AE%B0%E5%BD%95%EF%BC%88%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/">
+<link rel="canonical" href="https://hli5ky.top/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part1%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>blog进化记录（更新中） | 白玉楼</title>
+  <title>数据库系统概念（part1） | 白玉楼</title>
   
 
 
@@ -166,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/08/20/blog%E7%BE%8E%E5%8C%96%E8%AE%B0%E5%BD%95%EF%BC%88%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part1%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/holo.jpg">
@@ -179,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          blog进化记录（更新中）
+          数据库系统概念（part1）
         </h1>
 
         <div class="post-meta">
@@ -188,27 +189,21 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-08-20 19:03:12" itemprop="dateCreated datePublished" datetime="2023-08-20T19:03:12+08:00">2023-08-20</time>
+              <time title="创建时间：2023-08-21 22:57:14 / 修改时间：23:56:14" itemprop="dateCreated datePublished" datetime="2023-08-21T22:57:14+08:00">2023-08-21</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-08-22 00:05:48" itemprop="dateModified" datetime="2023-08-22T00:05:48+08:00">2023-08-22</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8/" itemprop="url" rel="index"><span itemprop="name">日常</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8/%E7%AB%99%E7%82%B9%E5%BB%BA%E8%AE%BE/" itemprop="url" rel="index"><span itemprop="name">站点建设</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
                 </span>
             </span>
 
@@ -228,8 +223,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/08/20/blog%E7%BE%8E%E5%8C%96%E8%AE%B0%E5%BD%95%EF%BC%88%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/08/20/blog%E7%BE%8E%E5%8C%96%E8%AE%B0%E5%BD%95%EF%BC%88%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part1%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part1%EF%BC%89/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -244,23 +239,125 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这是站点完善过程的记录（O.O）。</p>
+        <p>这篇笔记主要介绍数据库系统的基本定义和基本构成。如有错漏敬请指正。</p>
 <span id="more"></span>
-<p>2023-7-20  建站</p>
-<p>2023-8-19  更新站点图标。在萃梦想妖梦的立绘基础上改的。</p>
-<p>2023-8-21</p>
+<h1>初识数据库</h1>
+<h2 id="核心内容"><strong>核心内容</strong></h2>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p><a href="#11-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%9A%E4%B9%89"><strong>1.1 数据库的定义</strong></a></p>
+</li>
+<li class="lvl-4">
+<p><a href="#12-%E5%BC%95%E5%85%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8E%9F%E5%9B%A0"><strong>1.2 引入数据库管理系统的原因</strong></a></p>
+</li>
+<li class="lvl-4">
+<p><a href="#13-%E6%95%B0%E6%8D%AE%E8%A7%86%E5%9B%BE"><strong>1.3 数据视图</strong></a></p>
+<ul class="lvl-2">
+<li class="lvl-6"><a href="#131-%E6%95%B0%E6%8D%AE%E6%8A%BD%E8%B1%A1">1.3.1 数据抽象</a></li>
+<li class="lvl-6"><a href="#132-%E5%AE%9E%E4%BE%8B%E5%92%8C%E6%A8%A1%E5%BC%8F">1.3.2 实例和模式</a></li>
+<li class="lvl-6"><a href="#133-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B">1.3.3 数据模型</a></li>
+</ul>
+</li>
+<li class="lvl-4">
+<p><a href="#14-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%AD%E8%A8%80"><strong>1.4 数据库语言</strong></a></p>
+<ul class="lvl-2">
+<li class="lvl-6"><a href="#141-%E6%95%B0%E6%8D%AE%E6%93%8D%E7%BA%B5%E8%AF%AD%E8%A8%80">1.4.1 数据操纵语言</a></li>
+<li class="lvl-6"><a href="#142-%E6%95%B0%E6%8D%AE%E5%AE%9A%E4%B9%89%E8%AF%AD%E8%A8%80">1.4.2 数据定义语言</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-1-数据库的定义"><strong>1.1 数据库的定义</strong></h2>
+<p><em><strong>数据库</strong></em>：一个互相关联的数据的集合<br>
+<em><strong>数据库管理系统</strong>（DBMS）</em>：数据库和一组访问数据库中数据的程序</p>
+<h2 id="1-2-引入数据库管理系统的原因"><strong>1.2 引入数据库管理系统的原因</strong></h2>
+<p>典型的文件处理系统对于多用户的应用场景逐渐不适用，产生许多安全问题与无用的开销。具体弊端有如下几点：</p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>更新Valine评论默认表情为QQemoji,CDN为&quot;<a target="_blank" rel="noopener" href="//cdn.jsdelivr.net/gh/hyc1230/qqemoji/">//cdn.jsdelivr.net/gh/hyc1230/qqemoji/</a>&quot;</p>
+<p><em><strong>数据冗余和不一致</strong></em> ：文件和程序是在很长一段时间内由不同程序员创建，不同的文件可能有不同的结构，不同程序可能设计语言不同。而相同的信息可能保存在不同的文件中，比如一个有双计算机和经济学双专业的学生，他的学号信息和宿舍信息可能保存在两个系的文件中（由于建系时间可能不同，这两个系的文件结构可能不同），这会对信息储存和访问带来很大的无用开销。同时，可能在计算机系该生宿舍信息更新了，而经济系中宿舍信息没变，这会导致<em><strong>数据的不一致性</strong></em>。</p>
 </li>
 <li class="lvl-2">
-<p>更新footer图标，next主题图标使用自font-awesome，本地库地址为&quot;\themes\next\source\lib\font-awesome\css\all.min.css&quot;，在库中添加自己设计的样式并在\source\ _data\next.yml中修改图标。</p>
+<p><em><strong>无法灵活处理数据访问需求</strong></em> ：当使用者想要根据已有表中的信息生成一个新的表时，往往需要重新别写程序实现该功能。比如，学校负责人想要获得来自某个地区的所有学生的列表。而且，即使编写了程序实现该需求，当有新需求时又需要另外编写程序。</p>
 </li>
-<li class="lvl-3">
-<p>更新访客数和访问量，用的next内置的busuanzi-count</p>
+<li class="lvl-2">
+<p><em><strong>数据孤立</strong></em> ：由于保存数据的文件格式很可能各不相同，想要通过编写程序查询数据并不是一件轻松的事情。</p>
 </li>
-<li class="lvl-3">
-<p>升级hexo的Markdown渲染引擎，具体参照 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42951560/article/details/123596899">为hexo选择更高级的Markdown渲染器</a></p>
+<li class="lvl-2">
+<p><em><strong>数据约束难以实现</strong></em> ：数据库中的数据往往需要设置约束条件，比如教师工资应大于0。文件管理系统中，开发者通过在各种程序中加入适当代码来实现这种约束。但需要增删或修改约束条件时，特别是当这些条件涉及多个不同数据项时，这样的方法就不太可行了。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>原子性操作难以实现</strong></em> ：为保持数据库状态的一致性，在操作数据时应将某些操作设置为原子的。比如，银行数据库转账过程中，转账双方的操作必须是原子的。即要么一方余额减少，另一方增加；要么双方余额不变。否则在转账过程中系统发生故障，将会导致数据库状态的不一致。而传统的文件管理系统很难实现这一功能。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>并发访问异常</strong></em> ：假如两个用户同时向一个余额1000账户中转账，其中一个转账100，另一个转200。由于两个用户的转账程序并发执行，两人读到账户余额都是1000，两人操作后将得到不同的结果1100和1200，然而这两个结果都是错的，转账后余额应为1300。不幸的是在文件管理系统中数据可能被多个程序访问，而这些程序之间事先没有协商，实现并发访问的一致性是困难的。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>安全性问题</strong></em> ：并非数据库的所有用户都能访问所有数据。而访问数据的的应用程序随时都可能被加入系统，数据访问的安全性难以得到保障。</p>
+</li>
+</ul>
+<h2 id="1-3-数据视图"><strong>1.3 数据视图</strong></h2>
+<h3 id="1-3-1-数据抽象">1.3.1 数据抽象</h3>
+<p>许多数据库系统的用户并未经受专业的训练，为保证系统的可用性，开发者通过为系统划分抽象层次来简化与用户的交互。层次由下至上分别为：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><em><strong>物理层</strong></em> ：描述数据实际的储存方式。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>逻辑层</strong></em> ：描述储存了什么数据以及数据之间的关系。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>视图层</strong></em> ：描述数据库的某个部分，为特定的用户提供特定的服务。</p>
+</li>
+</ul>
+<h3 id="1-3-2-实例和模式">1.3.2 实例和模式</h3>
+<p><em><strong>实例（instance）</strong></em>：特定时刻储存在数据库中的数据集合。<br>
+<em><strong>模式（schema）</strong></em>：数据库的总体设计。    其中<em><strong>物理模式（phisical schema）</strong></em> 描述物理层设计，<em><strong>逻辑模式（logical schema）</strong></em> 描述逻辑层设计。<em><strong>子模式（subschema）</strong></em> 描述视图层设计。<br>
+<em><strong>物理数据独立性（physical data independence）</strong></em>：应用程序不依赖于物理模式，即使物理模式发生改变，它们也不需要重写。</p>
+<h3 id="1-3-3-数据模型">1.3.3 数据模型</h3>
+<p><em><strong>数据模型（data model）</strong></em>：数据模型是一个包含了描述数据、数据联系、数据语义以及一致性约束的概念工具的集合。也就是说它帮助我们以统一的方式组织数据和数据间的关系并为数据添加限制。</p>
+<p>数据模型主要包括一下四类：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><em><strong>关系模型（relational model）</strong></em></p>
+</li>
+<li class="lvl-2">
+<p><em><strong>实体-联系模型（entity-relationship model）</strong></em></p>
+</li>
+<li class="lvl-2">
+<p><em><strong>基于对象的数据模型（object-based data model）</strong></em></p>
+</li>
+<li class="lvl-2">
+<p><em><strong>半结构化数据模型（semistructured data model）</strong></em></p>
+</li>
+</ul>
+<h2 id="1-4-数据库语言"><strong>1.4 数据库语言</strong></h2>
+<h3 id="1-4-1-数据操纵语言">1.4.1 数据操纵语言</h3>
+<p><em><strong>数据操纵语言（Data-Manipulation Language）</strong></em>：让用户可以访问或操作以某种适当的数据模型组织起来的数据。主要包括以下类型：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><em><strong>增（Create）查（Read）改（Update）删（Delete）</strong></em>：也就是我们常说的crud操作。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>过程化DML</strong></em>：要求用户指定需要什么数据以及如何获得这些数据。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>声明化DML</strong></em>：只要求用户声明需要什么数据。</p>
+</li>
+</ul>
+<h3 id="1-4-2-数据定义语言">1.4.2 数据定义语言</h3>
+<p><em><strong>数据定义语言（Data-Definition Language）</strong></em>：定义数据库模式的语言，负责定义数据的结构、关系和一致性约束等。<br>
+<em><strong>一致性约束</strong></em>：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><em><strong>域约束（domain constraint）</strong></em> ：限定属性所有可能取值构成的域(包括数据类型和具体的值)。比如，限定教师工资为大于0的数字。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>参照完整性（referential integrity）</strong></em>：限定一个关系A中的某元素参照另一关系B中的元素，保持A中对应属性的值总是与B中对应属性的值一致。比如，我们总是希望同一个学生在所有的关系中保持相同的学号。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>断言（assertion）</strong></em>：数据库需要时刻满足断言的条件。只有不破坏断言条件的数据库更新才被允许。域约束与参照完整性是断言的特殊形式。</p>
+</li>
+<li class="lvl-2">
+<p><em><strong>授权（authorization）</strong></em> ：对于不同数据授予用户不同的访问权限。</p>
 </li>
 </ul>
 
@@ -272,7 +369,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%AB%99%E7%82%B9%E5%BB%BA%E8%AE%BE/" rel="tag"># 站点建设</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
           </div>
 
         
@@ -280,10 +378,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/08/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part1%EF%BC%89/" rel="next" title="数据库系统概念（part1）">
-      数据库系统概念（part1） <i class="fa fa-chevron-right"></i>
+    <a href="/2023/0820-blog%E7%BE%8E%E5%8C%96%E8%AE%B0%E5%BD%95%EF%BC%88%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/" rel="prev" title="blog进化记录（更新中）">
+      <i class="fa fa-chevron-left"></i> blog进化记录（更新中）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/0821-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part2%EF%BC%89/" rel="next" title="数据库系统概念（part2）">
+      数据库系统概念（part2） <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -344,6 +445,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">初识数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.</span> <span class="nav-text">核心内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.2.</span> <span class="nav-text">1.1 数据库的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E5%BC%95%E5%85%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.3.</span> <span class="nav-text">1.2 引入数据库管理系统的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E6%95%B0%E6%8D%AE%E8%A7%86%E5%9B%BE"><span class="nav-number">1.4.</span> <span class="nav-text">1.3 数据视图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-%E6%95%B0%E6%8D%AE%E6%8A%BD%E8%B1%A1"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.3.1 数据抽象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-%E5%AE%9E%E4%BE%8B%E5%92%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">1.3.2 实例和模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-3-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.3.</span> <span class="nav-text">1.3.3 数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%AD%E8%A8%80"><span class="nav-number">1.5.</span> <span class="nav-text">1.4 数据库语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-1-%E6%95%B0%E6%8D%AE%E6%93%8D%E7%BA%B5%E8%AF%AD%E8%A8%80"><span class="nav-number">1.5.1.</span> <span class="nav-text">1.4.1 数据操纵语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2-%E6%95%B0%E6%8D%AE%E5%AE%9A%E4%B9%89%E8%AF%AD%E8%A8%80"><span class="nav-number">1.5.2.</span> <span class="nav-text">1.4.2 数据定义语言</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -359,20 +461,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

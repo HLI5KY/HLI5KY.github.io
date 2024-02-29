@@ -20,20 +20,24 @@
     var CONFIG = {"hostname":"hli5ky.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="这是站点完善过程的记录（O.O）。">
+  <meta name="description" content="这篇笔记主要记录在使用Unity进行开发的过程中遇到的问题及解决方案以供参考。Unity版本为 2021.3.26.f1c1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="blog进化记录（更新中）">
-<meta property="og:url" content="https://hli5ky.top/2023/0820-construction_of_site/index.html">
+<meta property="og:title" content="Unity2d问题记录">
+<meta property="og:url" content="https://hli5ky.top/2023/09-18/index.html">
 <meta property="og:site_name" content="白玉楼">
-<meta property="og:description" content="这是站点完善过程的记录（O.O）。">
+<meta property="og:description" content="这篇笔记主要记录在使用Unity进行开发的过程中遇到的问题及解决方案以供参考。Unity版本为 2021.3.26.f1c1">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-20T11:03:12.000Z">
-<meta property="article:modified_time" content="2023-08-31T17:51:15.109Z">
+<meta property="og:image" content="https://hli5ky.top/image_md/unity_build_fail.png">
+<meta property="article:published_time" content="2023-09-18T05:02:29.000Z">
+<meta property="article:modified_time" content="2023-09-22T06:56:18.786Z">
 <meta property="article:author" content="HLI5KY">
-<meta property="article:tag" content="站点建设">
+<meta property="article:tag" content="games">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="bug">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hli5ky.top/image_md/unity_build_fail.png">
 
-<link rel="canonical" href="https://hli5ky.top/2023/0820-construction_of_site/">
+<link rel="canonical" href="https://hli5ky.top/2023/09-18/">
 
 
 <script id="page-configurations">
@@ -46,7 +50,7 @@
   };
 </script>
 <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script>
-  <title>blog进化记录（更新中） | 白玉楼</title>
+  <title>Unity2d问题记录 | 白玉楼</title>
   
 
 
@@ -171,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN" >
-    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/0820-construction_of_site/">
+    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/09-18/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/holo.jpg">
@@ -184,7 +188,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          blog进化记录（更新中）
+          Unity2d问题记录
         </h1>
 
         <div class="post-meta">
@@ -194,14 +198,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-20 19:03:12" itemprop="dateCreated datePublished" datetime="2023-08-20T19:03:12+08:00">2023-08-20</time>
+              <time title="创建时间：2023-09-18 13:02:29" itemprop="dateCreated datePublished" datetime="2023-09-18T13:02:29+08:00">2023-09-18</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-01 01:51:15" itemprop="dateModified" datetime="2023-09-01T01:51:15+08:00">2023-09-01</time>
+                <time title="修改时间：2023-09-22 14:56:18" itemprop="dateModified" datetime="2023-09-22T14:56:18+08:00">2023-09-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,11 +213,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8/" itemprop="url" rel="index"><span itemprop="name">日常</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8/%E7%AB%99%E7%82%B9%E5%BB%BA%E8%AE%BE/" itemprop="url" rel="index"><span itemprop="name">站点建设</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
                 </span>
             </span>
 
@@ -233,8 +237,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/0820-construction_of_site/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/0820-construction_of_site/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/09-18/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09-18/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -249,45 +253,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这是站点完善过程的记录（O.O）。</p>
+        <p>这篇笔记主要记录在使用Unity进行开发的过程中遇到的问题及解决方案以供参考。Unity版本为 2021.3.26.f1c1</p>
 <span id="more"></span>
-<p>2023-7-20  建站</p>
-<p>2023-8-19  更新站点图标。在萃梦想妖梦的立绘基础上改的。</p>
-<p>2023-8-21</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>更新Valine评论默认表情为QQemoji,CDN为&quot;<a target="_blank" rel="noopener" href="//cdn.jsdelivr.net/gh/hyc1230/qqemoji/">//cdn.jsdelivr.net/gh/hyc1230/qqemoji/</a>&quot;</p>
-</li>
-<li class="lvl-2">
-<p>更新footer图标，next主题图标使用自font-awesome，本地库地址为&quot;/themes/next/source/lib/font-awesome/css/all.min.css&quot;，在库中添加自己设计的样式并在/source/_data/next.yml中修改图标。</p>
-</li>
-<li class="lvl-3">
-<p>更新访客数和访问量，用的next内置的busuanzi-count</p>
-</li>
-<li class="lvl-3">
-<p>升级hexo的Markdown渲染引擎，具体参照 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42951560/article/details/123596899">为hexo选择更高级的Markdown渲染器</a></p>
-</li>
-</ul>
-<p>2023-8-25</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>修改页面布局</p>
-</li>
-<li class="lvl-2">
-<p>添加背景图片<br>
-2023-8-26</p>
-</li>
-<li class="lvl-2">
-<p>添加live2d，插件用的 <a target="_blank" rel="noopener" href="https://github.com/EYHN/hexo-helper-live2d">hexo-helper-live2d</a> 。角色是魔改的BanG Dream美竹兰。目前只改了瞳孔颜色和发色，服装、动作和互动以后再说吧。_(:з」∠)_<br>
-2023-9-1</p>
-</li>
-<li class="lvl-2">
-<p>完全魔改，美竹兰–&gt;妖梦。角色身上的大部分部件来自 <a target="_blank" rel="noopener" href="https://github.com/Eikanya/Live2d-model">live2d-model</a> 和 <a target="_blank" rel="noopener" href="https://github.com/Eikanya/Live2d-model">live2d</a>,少部分来自我的便宜抠图。目前已经完成了角色的服装和动作，动画还没录制，视线跟随也没做，模型的透视还有些问题（理工男完全没艺术细胞QAQ）。</p>
-</li>
-<li class="lvl-2">
-<p>由于hexo-helper-live2d不支持moc3，博客的live2d支持改用了 <a target="_blank" rel="noopener" href="https://github.com/Weidows-projects/Live2dLoader">Live2dLoader</a></p>
-</li>
-</ul>
+<h3 id="Unity-安卓应用-build-失败"><strong>Unity 安卓应用 build 失败</strong></h3>
+<p>在从Unity中导出apk时出现错误：</p>
+<p><img src="/image_md/unity_build_fail.png" alt="unity_build_fail"></p>
+<p>在众多报错的最后一条中有这样一句：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :launcher:transformClassesAndResourcesWithR8ForRelease FAILED</span><br></pre></td></tr></table></figure>
+<p>尝试修改gradle.property，但没有效果。经过无数次搜索和尝试后终于找到了原因，这个bug出在Unity的keystore中的密码错误。解决方案也很简单，新创建一个密码即可。流程如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File -&gt; Build Settings -&gt; Player Settings -&gt; Publishing Settings -&gt; keystore manager -&gt; keystore -&gt; create new</span><br></pre></td></tr></table></figure>
+<p>之后根据软件提示创建密码并将当前项目的密码设置好即可成功导出。参考：<a target="_blank" rel="noopener" href="https://forum.unity.com/threads/gradle-build-failed-solved.864856/">Gradle build failed</a></p>
 
     </div>
 
@@ -297,7 +272,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%AB%99%E7%82%B9%E5%BB%BA%E8%AE%BE/" rel="tag"># 站点建设</a>
+              <a href="/tags/games/" rel="tag"># games</a>
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+              <a href="/tags/bug/" rel="tag"># bug</a>
           </div>
 
         
@@ -305,10 +282,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/0821-database_part1/" rel="next" title="数据库系统概念（part1）">
-      数据库系统概念（part1） <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08-24/" rel="prev" title="手动挡汽车换挡原则及简单原理">
+      <i class="fa fa-chevron-left"></i> 手动挡汽车换挡原则及简单原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10-31/" rel="next" title="在AndroidStudio中使用Python">
+      在AndroidStudio中使用Python <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -369,6 +349,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unity-%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8-build-%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.</span> <span class="nav-text">Unity 安卓应用 build 失败</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -423,8 +404,8 @@
 
 <div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  &copy; 2023 – 
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa cus_bobow"></i>
   </span>
@@ -490,6 +471,31 @@
 
 
   
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
 
 
 

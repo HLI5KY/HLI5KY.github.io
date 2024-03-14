@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/youmu-apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/youmu_32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/youmu_16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hli5ky.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇文章主要介绍数据库的设计过程，包括E-R模型和各类范式。如有错漏敬请指正。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库系统概念（part3）">
+<meta property="og:url" content="https://hli5ky.top/2023/08-21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/index.html">
+<meta property="og:site_name" content="白玉楼">
+<meta property="og:description" content="这篇文章主要介绍数据库的设计过程，包括E-R模型和各类范式。如有错漏敬请指正。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hli5ky.top/image_md/complex_attributes.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/many-to-one.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/caedinality_limits_on_relationship_sets.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/weak_entity_set.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/E-R_diagram_for_university.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/compute_alpha%2B.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/computing_canonical_cover.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/dependency_preserving.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/BCNF_decomposition.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/3NF_decomposition.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/4NF_decomposition.png">
+<meta property="article:published_time" content="2023-08-21T14:57:25.000Z">
+<meta property="article:modified_time" content="2023-08-28T03:08:55.279Z">
+<meta property="article:author" content="HLI5KY">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hli5ky.top/image_md/complex_attributes.png">
+
+<link rel="canonical" href="https://hli5ky.top/2023/08-21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script>
+  <title>数据库系统概念（part3） | 白玉楼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  
+
+    
+
+    
+
+  <div class="site-nav-right">
+    
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+    <li class="logo-item" style="vertical-align:bottom;">  
+              <a href="/">
+                <i>
+                  <img  class="custom-logo-image" src="/images/youmu_logo.png" alt="白玉楼" style="opacity: 1;transform: translateY(0px);">
+                </i>
+              </a>
+    </li>
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN" >
+    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/08-21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/holo.jpg">
+      <meta itemprop="name" content="HLI5KY">
+      <meta itemprop="description" content="英雄可不能临阵脱逃啊">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="白玉楼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据库系统概念（part3）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-21 22:57:25" itemprop="dateCreated datePublished" datetime="2023-08-21T22:57:25+08:00">2023-08-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-28 11:08:55" itemprop="dateModified" datetime="2023-08-28T11:08:55+08:00">2023-08-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/08-21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/08-21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part3%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇文章主要介绍数据库的设计过程，包括E-R模型和各类范式。如有错漏敬请指正。</p>
+<span id="more"></span>
+<h1>数据库设计</h1>
+<h2 id="核心内容">核心内容</h2>
+<ul class="lvl-0">
+<li class="lvl-2"><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1">数据库设计</a>
+<ul class="lvl-2">
+<li class="lvl-4"><a href="#%E6%A0%B8%E5%BF%83%E5%86%85%E5%AE%B9">核心内容</a></li>
+<li class="lvl-4"><a href="#e-r%E6%A8%A1%E5%9E%8B">E-R模型</a>
+<ul class="lvl-4">
+<li class="lvl-6"><a href="#11-%E5%AE%9E%E4%BD%93-%E8%81%94%E7%B3%BB%E6%A8%A1%E5%9E%8B"><strong>1.1 实体-联系模型</strong></a></li>
+<li class="lvl-6"><a href="#12-e-r%E5%9B%BE"><strong>1.2 E-R图</strong></a>
+<ul class="lvl-6">
+<li class="lvl-8"><a href="#121-%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><strong>1.2.1 基本结构</strong></a></li>
+<li class="lvl-8"><a href="#122-%E5%BC%B1%E5%AE%9E%E4%BD%93%E9%9B%86"><strong>1.2.2 弱实体集</strong></a></li>
+<li class="lvl-8"><a href="#123-%E5%A4%A7%E5%AD%A6%E7%9A%84e-r%E5%9B%BE"><strong>1.2.3 大学的E-R图</strong></a></li>
+</ul>
+</li>
+<li class="lvl-6"><a href="#13-e-r%E6%A8%A1%E5%9E%8B%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B"><strong>1.3 E-R模型转化为关系模型</strong></a>
+<ul class="lvl-6">
+<li class="lvl-8"><a href="#131-%E7%AE%80%E5%8D%95%E8%BD%AC%E6%8D%A2"><strong>1.3.1 简单转换</strong></a></li>
+<li class="lvl-8"><a href="#132-%E6%A8%A1%E5%BC%8F%E5%90%88%E5%B9%B6"><strong>1.3.2 模式合并</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="lvl-4"><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E4%B8%8E%E8%8C%83%E5%BC%8F">数据库设计与范式</a>
+<ul class="lvl-4">
+<li class="lvl-6"><a href="#21-%E8%AE%BE%E8%AE%A1%E9%80%89%E6%8B%A9"><strong>2.1 设计选择</strong></a></li>
+<li class="lvl-6"><a href="#22-%E5%8E%9F%E5%AD%90%E5%9F%9F%E4%B8%8E%E7%AC%AC%E4%B8%80%E8%8C%83%E5%BC%8F"><strong>2.2 原子域与第一范式</strong></a></li>
+<li class="lvl-6"><a href="#23-%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96"><strong>2.3 函数依赖</strong></a>
+<ul class="lvl-6">
+<li class="lvl-8"><a href="#231-%E5%AE%9A%E4%B9%89"><strong>2.3.1 定义</strong></a></li>
+<li class="lvl-8"><a href="#232-armstrong%E5%85%AC%E7%90%86"><strong>2.3.2 Armstrong公理：</strong></a></li>
+<li class="lvl-8"><a href="#233-%E5%B1%9E%E6%80%A7%E9%9B%86%E4%B8%8A%E7%9A%84%E9%97%AD%E5%8C%85"><strong>2.3.3 属性集上的闭包</strong></a></li>
+<li class="lvl-8"><a href="#234-%E6%AD%A3%E5%88%99%E8%A6%86%E7%9B%96"><strong>2.3.4 正则覆盖</strong></a></li>
+<li class="lvl-8"><a href="#235-%E6%97%A0%E6%8D%9F%E5%88%86%E8%A7%A3"><strong>2.3.5 无损分解</strong></a></li>
+<li class="lvl-8"><a href="#236-%E4%BE%9D%E8%B5%96%E4%BF%9D%E6%8C%81"><strong>2.3.6 依赖保持</strong></a></li>
+</ul>
+</li>
+<li class="lvl-6"><a href="#24-boyce-codd-%E8%8C%83%E5%BC%8Fbcnf"><strong>2.4 Boyce-Codd 范式（BCNF）</strong></a>
+<ul class="lvl-6">
+<li class="lvl-8"><a href="#241-%E5%88%A4%E6%96%ADBCNF"><strong>2.4.1 判断BCNF</strong></a></li>
+<li class="lvl-8"><a href="#242-BCNF%E5%88%86%E8%A7%A3"><strong>2.4.2 BCNF分解</strong></a></li>
+</ul>
+</li>
+<li class="lvl-6"><a href="#25-%E7%AC%AC%E4%B8%89%E8%8C%83%E5%BC%8F3nf"><strong>2.5 第三范式（3NF）</strong></a></li>
+<li class="lvl-6"><a href="#26-%E7%AC%AC%E5%9B%9B%E8%8C%83%E5%BC%8F4nf"><strong>2.6 第四范式（4NF）</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="E-R模型">E-R模型</h2>
+<p>在设计数据库时，若直接采用关系模型进行设计，往往不够直观。一般采用 <strong>实体-关系模型</strong> 进行设计，再用关系模型进行实现。</p>
+<h3 id="1-1-实体-联系模型"><strong>1.1 实体-联系模型</strong></h3>
+<p>E-R模型主要包含三个概念：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>实体集：</strong> 实体集类似于 <strong>“类”</strong> 的概念，它表示一类实体的集合，比如 <strong>职工</strong> 是一个实体集，而具体到某个职工 <strong>张三</strong> 就是一个实体。实体集由一组属性限定。</p>
+</li>
+<li class="lvl-2">
+<p><strong>联系集：</strong> 联系集中的属性来自它所联系的两个或多个集合（的主码），它通过元组中属性的对应来联系两个或多个实体集中的具体实体。其中的元组也可成为 <strong>联系实例</strong>。</p>
+</li>
+<li class="lvl-2">
+<p><strong>属性：</strong> 用于限定实体集和关系集。由于实体集和关系集本身还是集合，这里属性的定义与关系模型中属性的定义几乎一样。只是有四个拓展：</p>
+<ul class="lvl-2">
+<li class="lvl-4"><strong>多值属性：</strong> 一个属性可以对应于一组值。比如一个老师可能有多个电话号码，这在实体集中可能表现为一个元组，那么 <strong>电话号码</strong> 就是一个多值属性。相对的，一个属性只能对应一个值，那它就是 <strong>单值属性</strong> 。</li>
+<li class="lvl-4"><strong>复合属性：</strong> 一个属性可以拥有多个子属性。比如属性  <strong>地址</strong> 由 <strong>城市 街道 门牌号</strong> 等多个属性构成，那么 <strong>地址</strong> 就是一个 <strong>复合属性</strong> 。</li>
+<li class="lvl-4"><strong>描述性属性：</strong> 描述性属性是存在于联系集中的，不来自于任何一个该联系集所联系的实体集的属性。其作用是对联系集进行描述，添加额外信息。</li>
+<li class="lvl-4"><strong>派生属性：</strong> 不显式地储存的属性，往往在需要时再计算出来。比如，在实体集 <strong>借阅书籍</strong> 中包含属性 <strong>借出时间</strong> 和 <strong>归还时间</strong> 那么就可以通过这两个属性计算出派生属性 <strong>借书时长</strong></li>
+</ul>
+</li>
+</ul>
+<p>以上概念将在1.2和1.3中有更直观的体现。</p>
+<h3 id="1-2-E-R图"><strong>1.2 E-R图</strong></h3>
+<h4 id="1-2-1-基本结构"><strong>1.2.1 基本结构</strong></h4>
+<p>E-R图包括几个基本构件：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>分成两个部分的矩形（即表）：</strong> 代表实体集，表头代表实体名称，表内容为所有的属性。弱实体集用双矩形。</p>
+</li>
+<li class="lvl-2">
+<p><strong>属性：</strong> 主要介绍三种复杂属性的表示方法：</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>复合属性：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*复合属性name由fname和lname组成*/</span></span><br><span class="line">name</span><br><span class="line">    fname</span><br><span class="line">    lname</span><br></pre></td></tr></table></figure>
+</li>
+<li class="lvl-4">
+<p>多值属性：用大括号<code>&#123;&#125;</code>括起来。</p>
+</li>
+<li class="lvl-4">
+<p>派生属性：后加<code>()</code>表示，如 <code>age()</code>。<br>
+<img src="/image_md/complex_attributes.png" alt=""></p>
+</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>下划线</strong> 表示主码的组成属性。</p>
+</li>
+<li class="lvl-2">
+<p><strong>菱形：</strong> 代表联系集。</p>
+</li>
+<li class="lvl-2">
+<p><strong>未分割的矩形（没有表头的表）：</strong> 代表联系集的属性。</p>
+</li>
+<li class="lvl-2">
+<p><strong>线段：</strong> 连接实体集于联系集，是否有箭头代表其连接的实体集的映射关系。</p>
+</li>
+<li class="lvl-2">
+<p><strong>虚线：</strong> 连接联系集与联系集的属性。</p>
+</li>
+<li class="lvl-2">
+<p><strong>双线：</strong> 表示实体在联系集中的 <strong>全部参与</strong> 。也就是说该实体集的每一个元组在联系集中都能找到至少一个元组与之对应。反之，若存在一个元组在联系集中找不到任何一个元组与之对应，则为 <strong>部分参与</strong> 。</p>
+</li>
+<li class="lvl-2">
+<p><strong>双菱形：</strong> 代表连接弱实体集和强实体集的联系集（标志性联系）。弱实体集的概念将在 1.2.2 细说。</p>
+</li>
+<li class="lvl-2">
+<p><strong>下划虚线：</strong> 表示弱实体集的分辨符。</p>
+</li>
+<li class="lvl-2">
+<p><strong>映射基数</strong> 表示两个实体集之间的映射关系，具体有 <strong>一对一、一对多、多对一、多对多等</strong>，“一”的一方有箭头，&quot;多&quot;的一方无箭头。<em><strong>当需要表示两个以上的实体集之间的联系时，与联系集连接的线段上至多有一个有箭头。</strong></em><br>
+<img src="/image_md/many-to-one.png" alt="从instructor到student的多对一联系"><br>
+E-R图还提供了一种更复杂的约束映射关系的方法。即在线段上加上形如 <code>l..h</code>的标识，表示实体集中的每个元组在关系集中至少有 <code>l</code> 个对应，至多有 <code>h</code> 个对应。<img src="/image_md/caedinality_limits_on_relationship_sets.png" alt=""><br>
+图中表示 <strong>instructor</strong> 中每个元组在 <strong>advisor</strong> 中至少有 0 个对应， <strong>student</strong> 中每个元组在 <strong>advisor</strong>中有且只有一个对应。 <code>1..*</code>可以用 <strong>双线</strong> 代替，表示全部参与。</p>
+</li>
+</ul>
+<h4 id="1-2-2-弱实体集"><strong>1.2.2 弱实体集</strong></h4>
+<p>没有足够的属性来形成主码的实体集称为 <strong>弱实体集</strong>，反之为 <strong>强实体集</strong>。每个弱实体集必须与一个强实体集关联其存在才有意义，二者之间的联系被称为 <strong>标志性联系</strong>。</p>
+<p>若两个实体集的主码一致，则两个实体集之间的联系集是冗余的（只包含主码），但删除这个联系集会导致两个实体集间的联系变成隐含的。为避免这种事情的发生，可将其中一个实体集变成弱实体集。弱实体集的主码由强实体集的主码加上弱实体集的 <strong>分辨符</strong> 组成（画图的时候不用画弱实体集的主码）。<strong>分辨符</strong> 是指弱实体集中当强实体集主码确定时，能唯一标识对应的元组的属性。比如：<img src="/image_md/weak_entity_set.png" alt=""><br>
+当<code>course_id</code>确定时，<code>sec_id semester year</code> 可以唯一地标识 <code>section</code> 中的元组，故section的分辨符是<code>sec_id semester year</code>。</p>
+<h4 id="1-2-3-大学的E-R图"><strong>1.2.3 大学的E-R图</strong></h4>
+<p><img src="/image_md/E-R_diagram_for_university.png" alt=""></p>
+<h3 id="1-3-E-R模型转化为关系模型"><strong>1.3 E-R模型转化为关系模型</strong></h3>
+<p>在我们通过E-R图设计好数据库后，要将其转化成关系模式进行实现。对于每个实体集和联系集都对应一个关系模式。</p>
+<h4 id="1-3-1-简单转换"><strong>1.3.1 简单转换</strong></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>强实体集：</strong> 关系模式的主码对应强实体集的主码，属性对应强实体集的属性。介绍几种复杂属性的表示方法：</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p><strong>复合属性：</strong> 对于复合属性的每个子属性，在关系模式中建立相应的属性，但不为复合属性本身建立属性（冗余了）。</p>
+</li>
+<li class="lvl-4">
+<p><strong>多值属性：</strong> 对于每个多值属性建立一个单独的关系模式，模式的主码由多值属性所在的实体集的主码 + 多值属性组成。在新的模式中，多值属性的每一个值在模式中储存为一个元组。同时该新模式应建立参考原实体集主码构成的外码约束。</p>
+<p>比如，考虑实体集 <strong>instructor(<u>ID</u>,name,age,phone)</strong> ,其中<strong>phone</strong> 为多值属性，则可以建立模式 <strong>instructor(<u>ID</u>,age,name)</strong> 和 <strong>inst_phone(<u>ID</u>,<u>phone</u>)</strong> 来描述该实体集。</p>
+<p>若实体集只包含主码和一个多值属性，可以按照上述方法建立新模式后删除原实体集构成的模式（建立新模式后，原实体集只剩下主码）。</p>
+</li>
+<li class="lvl-4">
+<p><strong>派生属性：</strong>  派生属性不在关系模式中显示表达，但可以通过设立函数来实现。</p>
+</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>弱实体集：</strong><br>
+弱实体集建立的模式的主码由相应强实体集的主码 + 弱实体集的分辨符组成。同时在该模式上建立参考强实体集主码的外码约束。一般而言，标识性联系集是冗余的，在E-R图和关系模式中均不用给出。（其作用仅仅是显式表明强弱实体集间有关系）</p>
+</li>
+<li class="lvl-2">
+<p><strong>联系集：</strong> 由于主码是可以唯一标识元组的属性集，也就是说任意两个元组不包含相同的主码。于是我们可以得出如下结论：</p>
+<ul class="lvl-2">
+<li class="lvl-4">对于多对多的二元联系，其主码为两个实体集的主码之并。</li>
+<li class="lvl-4">对于多对一的二元联系，其主码为“多”的一方的主码。</li>
+<li class="lvl-4">对于一对一的二元联系，其主码可以是任意一方的主码。</li>
+<li class="lvl-4">对于不含箭头的n元联系集，其主码为所有实体集的主码之并。</li>
+<li class="lvl-4">对于只含一个箭头的n元联系集，其主码为不在箭头一端的所有实体集主码之并。</li>
+</ul>
+<p>对于上述所有情况，都需要建立参考相应实体集的主码的外码约束。</p>
+</li>
+</ul>
+<h4 id="1-3-2-模式合并"><strong>1.3.2 模式合并</strong></h4>
+<p>有时候我们可以通过更少的模式描述实体集之间的联系。参考一个从 <strong>A</strong> 到 <strong>B</strong> 的多对一联系，联系集为 <strong>AB</strong> ，那么我们可以将 <strong>A</strong> 和 <strong>AB</strong> （主码都是一样的）合并为一个大的模式 <strong>C</strong> ，该模式包含 <strong>A</strong> 和 <strong>AB</strong> 中所有的属性，并且以 <strong>A</strong> 中的主码为主码。于是我们用 <strong>C</strong> 和 <strong>B</strong> 两个模式就描述了 <strong>A</strong> <strong>B</strong> 两个实体集及其关系。</p>
+<p>当实体集之间联系是一对一时，联系集可以和任意一个实体集合并。</p>
+<h2 id="数据库设计与范式">数据库设计与范式</h2>
+<h3 id="2-1-设计选择"><strong>2.1 设计选择</strong></h3>
+<p>在我们设计关系型数据库时常常会思考是使用更大的模式（最极端的就是所有属性都在一张表中）还是采用更小的模式。</p>
+<p>在实践中发现大的模式往往会导致冗余、查询不便、难以保持一致性等问题，于是我们可以将大的模式分解成满足一些范式的小的模式以满足我们查询的需要。</p>
+<h3 id="2-2-原子域与第一范式"><strong>2.2 原子域与第一范式</strong></h3>
+<p><strong>原子域</strong> ：当一个属性的域没有任何子结构，即这个属性既不是多值属性也不是复合属性，则这个属性的域为原子域。<br>
+<strong>第一范式：</strong> 若关系模式 <strong>R</strong> 的所有属性的域都是原子的，则这个关系模式属于第一范式。</p>
+<p>对于不满足第一范式的关系模式，我们按照1.3.1提供的方法进行分解即可。</p>
+<h3 id="2-3-函数依赖"><strong>2.3 函数依赖</strong></h3>
+<p>在接下来的描述中，我们用希腊字母表示一个属性集，靠前的大写字母表示一个属性。<strong>R</strong> 表示模式的所有属性， <strong>r（R）</strong> 表示属性为R的模式，简写成 <strong>R</strong> 。 <strong>F</strong> 表示关系的函数依赖集， <strong>F<sup>+</sup></strong> 表示函数依赖集的闭包， <strong>F<sub>c</sub></strong> 表示函数依赖集的正则覆盖。</p>
+<h4 id="2-3-1-定义"><strong>2.3.1 定义</strong></h4>
+<p><strong>函数依赖：</strong> 函数依赖 $\alpha \rightarrow \beta$ 在模式r（R）上成立表示对于任意的元组，若 $\alpha$<sub>1</sub> = $\alpha$<sub>2</sub> 则 $\beta$<sub>1</sub> = $\beta$<sub>2</sub>。 K $\rightarrow$ r® 表示 K 是 r（R）的超码。</p>
+<p>函数依赖的意义在于，若一个关系中存在函数依赖 $\alpha \rightarrow \beta$ 但 $\alpha$ 并不是关系的超码，那么说明关系可能存在冗余（属性对（$\alpha$<sub>n</sub>,$\beta$<sub>n</sub>）被多次储存），我们可以通过范式对模式进行分解。</p>
+<p><strong>平凡的函数依赖：</strong> 若函数依赖在任何一个关系中都成立，则它为平凡的。比如，A $\rightarrow$ A 在任何包含 A 的关系中成立，类似的 AB $\rightarrow$ A 在任何包含 A 的关系中成立。</p>
+<h4 id="2-3-2-Armstrong公理："><strong>2.3.2 Armstrong公理：</strong></h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>自反律：</strong> $\alpha 且 \beta \subset \alpha$,则 $\alpha \rightarrow \beta$ 成立。</p>
+</li>
+<li class="lvl-2">
+<p><strong>增补律：</strong> 若 $\alpha \rightarrow \beta$ ，则 $\gamma\alpha\rightarrow\gamma\beta$。</p>
+</li>
+<li class="lvl-2">
+<p><strong>传递律：</strong> 若 $\alpha \rightarrow \beta$ 且 $\beta \rightarrow \gamma$ ，则 $\alpha \rightarrow \gamma$ 。</p>
+</li>
+</ul>
+<p><strong>推论：</strong></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>合并律：</strong> 若 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$ 则 $\alpha \rightarrow \beta\gamma$ 。</p>
+</li>
+<li class="lvl-2">
+<p><strong>分解律：</strong> 若 $\alpha \rightarrow \beta\gamma$ 则 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$ 。</p>
+</li>
+<li class="lvl-2">
+<p><strong>伪传递律：</strong> 若 $\alpha \rightarrow \beta$ 且 $\gamma\beta\rightarrow\theta$ 则 $\gamma\alpha\rightarrow\theta$ 。</p>
+</li>
+<li class="lvl-2">
+<p>$\alpha \rightarrow \beta$ 且 $\gamma\rightarrow\theta$ 则 $\alpha\gamma \rightarrow \beta\theta$</p>
+</li>
+</ul>
+<h4 id="2-3-3-属性集上的闭包"><strong>2.3.3 属性集上的闭包</strong></h4>
+<p>若 $\alpha\rightarrow B$ 则属性 B 被 $\alpha$ <strong>函数确定</strong>。</p>
+<p>$\alpha$ 在 F 下的闭包记为 $\alpha$<sup>+</sup>。</p>
+<p><strong>算法：</strong><br>
+<img src="/image_md/compute_alpha%2B.png" alt=""></p>
+<p><strong>属性闭包的用途：</strong></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>若 $\alpha$<sup>+</sup>包含 R 中所有的属性，则 $\alpha$ 是超码。</p>
+</li>
+<li class="lvl-2">
+<p>若 $\beta\subset$ $\alpha$<sup>+</sup> 则 $\alpha\rightarrow\beta$</p>
+</li>
+<li class="lvl-2">
+<p>计算 F<sup>+</sup>, 对任意 $\alpha\subset R$, 计算 $\alpha$<sup>+</sup>;对任意的 $S\subset\alpha$，输出一个函数依赖 $\alpha\rightarrow S$</p>
+</li>
+</ul>
+<h4 id="2-3-4-正则覆盖"><strong>2.3.4 正则覆盖</strong></h4>
+<p><strong>无关属性：</strong> 如果去除函数依赖中的一个属性不会改变该依赖集的闭包，则该属性为 <strong>无关的</strong>。考虑 <strong>F</strong> 中的函数依赖 $\alpha\rightarrow\beta$:</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>A $\in \alpha$ 且 $F\rightarrow((F-{\alpha \rightarrow \beta}) \cup {(\alpha - A)\rightarrow\beta})$ 则 <strong>A</strong> 在 $\alpha$ 是无关的。（弱条件推强条件）具体而言，令 $\gamma = \alpha - A$ 若 <strong>F</strong> 下 $\gamma^+$ 包含 $\beta$ 所有属性，则 <strong>A</strong> 在 $\alpha$ 中无关。</p>
+</li>
+<li class="lvl-2">
+<p>B $\in \beta$ 且 $((F-{\alpha \rightarrow \beta}) \cup {\alpha\rightarrow(\beta - B)})\rightarrow F$ 则 <strong>B</strong> 在 $\beta$ 是无关的。（弱结果推强结果）具体而言，令 $F’ = ((F-{\alpha \rightarrow \beta}) \cup {\alpha\rightarrow(\beta - B)})$ ,若 $F’$ 下 $\alpha^+$ 包含 B，则 B 在  $\beta$ 无关。</p>
+</li>
+</ul>
+<p><strong>正则覆盖：</strong> 由 $F$ 得到的依赖集 $F_c$ 不包含无关属性，且 $F_c$ 的左半部分是唯一的。求正则覆盖的过程就是逐一剔除无关属性，并在最后将左半部相同的依赖合并。$F_c^+$ = $F^+$ ,从某种意义上讲， $F_c$ 是一个最简的依赖集。 正则覆盖并不唯一。</p>
+<p><strong>算法：</strong><br>
+<img src="/image_md/computing_canonical_cover.png" alt=""></p>
+<h4 id="2-3-5-无损分解"><strong>2.3.5 无损分解</strong></h4>
+<p><strong>无损分解：</strong> 若将关系 $R$ 分解成 $R_1 R_2$,再将 $R_1 R_2$ 自然连接得到 $R’$ 若在这个过程中没有发生信息的损失（即 $R = R’$）,则称 $R_1 R_2$ 是 $R$ 的一个无损分解。</p>
+<p>无损分解的充要条件是： $R_1\cap R_2$ 是 $R_1$ 或 $R_2$ 的超码。</p>
+<h4 id="2-3-6-依赖保持"><strong>2.3.6 依赖保持</strong></h4>
+<p>我们将关系 $R$ 分解成 $R_1 R_2 R_3 … R_n$ , $F_i$ 是只包含 $F^+$ 中含有 $R_i$ 属性的依赖集。称 $F_i$ 是 $R_i$ 上的限定。令 $F’ = F_1 \cup F_2 \cup … \cup F_n$ ,若 $F’^+ = F^+$ 则称 分解 $R_1 R_2 R_3 … R_n$是 <strong>依赖保持的</strong></p>
+<p>在判断分解是否依赖保持的时候一个简单的方法是：若 $F$ 中的每一个依赖都能在分解得到的某一个限定中得到验证，则分解是依赖保持的。但是要注意，依赖保持不代表 $F$ 中的每一个依赖总能在分解得到的某一个限定中得到验证。</p>
+<p><strong>验证依赖保持的算法：</strong><br>
+验证 $\alpha\rightarrow\beta$ 是否依赖保持：<br>
+<img src="/image_md/dependency_preserving.png" alt=""><br>
+若 result 包含 $\beta$ 中的所有属性，则 $\alpha\rightarrow\beta$ 在分解后保持依赖。<br>
+该算法的正确性是由于：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>若 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$ 则 $\alpha \rightarrow \beta\gamma$</p>
+</li>
+<li class="lvl-2">
+<p>若 $\alpha \rightarrow \beta$ 且 $\gamma\rightarrow\theta$ 则 $\alpha\gamma \rightarrow \beta\theta$</p>
+</li>
+<li class="lvl-2">
+<p>若 $\beta\rightarrow\gamma$ 且 $\beta\subseteq\alpha$ 则 $\alpha\rightarrow\gamma$</p>
+</li>
+</ul>
+<h3 id="2-4-Boyce-Codd-范式（BCNF）"><strong>2.4 Boyce-Codd 范式（BCNF）</strong></h3>
+<p>具有函数依赖集 <strong>F</strong> 的关系模式 <strong>R</strong> 属于BCNF的条件是对 <strong>F<sup>+</sup></strong> 中所有形如 $\alpha \rightarrow \beta$ （$\alpha \subset R ,\beta \subset R$）满足至少一条：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$\alpha \rightarrow \beta$ 是平凡的。</p>
+</li>
+<li class="lvl-2">
+<p>$\alpha$ 是 R 的一个超码。</p>
+</li>
+</ul>
+<p>若一个关系不满足BCNF,则至少存在一个非平凡函数依赖 $\alpha \rightarrow \beta$ ，$\alpha$ 不是 R 的一个超码,我们可以按照如下规则对其进行分解，直至所有关系都满足BCNF：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$(\alpha \cup \beta )$,这个关系显然满足BCNF（$\alpha$ 是超码）。</p>
+</li>
+<li class="lvl-2">
+<p>$(R - (\beta - \alpha))$, $(\beta - \alpha)$ 相关属性已经存在了 $(\alpha \cup \beta )$ 中，故从原关系中减去。</p>
+</li>
+</ul>
+<p>P.S. 任何只包含两个属性的模式都是BCNF。</p>
+<p>BCNF的优势在于分解后的关系中不含冗余，但它的问题在于分解后的模式不一定是 <strong>依赖保持</strong> 的，也就是说分解后的模式的函数依赖集的并集 <strong>F’</strong> 的闭包 <strong>F’<sup>+</sup></strong> 不一定等于 <strong>F<sup>+</sup></strong> 。这会导致我们无法检验部分约束条件（函数依赖）。</p>
+<h4 id="2-4-1-判断BCNF"><strong>2.4.1 判断BCNF</strong></h4>
+<p>判断一个依赖集 $F$ 是否满足 BCNF 的一个简单方法：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>只考虑 $F$ 上的依赖而不需要考虑 $F^+$ 上的依赖，我们可以证明 $F$ 上的依赖没有违反 BCNF 则 $F^+$ 上的依赖也不会违反 BCNF（从Armstrong公理出发）。</p>
+</li>
+<li class="lvl-2">
+<p>对于非平凡函数依赖，通过求属性上的闭包判断左半部是否为超码。</p>
+</li>
+</ul>
+<p>但是对于分解后的子关系，第一条不一定成立，可以参照如下方法判断：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对于 $R_i$ 中属性的每个子集 $\alpha$ ,确保 $\alpha$ 在 $F$ 上的闭包要么不含 $R_i-\alpha$ 的任何属性（平凡），要么包含 $R_i$ 的所有属性（超码）。</p>
+<p>若 $R_i$ 上某个属性集 $\alpha$ 违反该条件，那么显然依赖 $\alpha\rightarrow(\alpha^+ -\alpha)\cap R_i$ 违反 BCNF 且该依赖在 $F^+$ 中。</p>
+</li>
+</ul>
+<h4 id="2-4-2-BCNF分解"><strong>2.4.2 BCNF分解</strong></h4>
+<p><strong>算法：</strong><br>
+<img src="/image_md/BCNF_decomposition.png" alt=""><br>
+该算法和之前讲到的是一样的，只是要求了 $\alpha\cap\beta =\emptyset$ 。这个要求保证了分解始终是无损的，因为 $(R_i-\beta)\cap (\alpha,\beta)$ = $\alpha$, 而 $\alpha\cap\beta =\emptyset$ 保证了 $\alpha$ 是 $(\alpha,\beta)$ 的超码。</p>
+<h3 id="2-5-第三范式（3NF）"><strong>2.5 第三范式（3NF）</strong></h3>
+<p>具有函数依赖集 <strong>F</strong> 的关系模式 <strong>R</strong> 属于3NF的条件是对 <strong>F<sup>+</sup></strong> 中所有形如 $\alpha \rightarrow \beta$ （$\alpha \subset R ,\beta \subset R$）满足至少一条：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$\alpha \rightarrow \beta$ 是平凡的。</p>
+</li>
+<li class="lvl-2">
+<p>$\alpha$ 是 R 的一个超码。</p>
+</li>
+<li class="lvl-2">
+<p>$\beta - \alpha$ 中的每个属性 A 都必须包含于 R 的一个候选码（可以包含在不同的候选码中）。</p>
+</li>
+</ul>
+<p>3NF相比BCNF保证了依赖保持的特性，但可能产生少量冗余。</p>
+<p><strong>分解算法：</strong><br>
+<img src="/image_md/3NF_decomposition.png" alt=""><br>
+简单来说，该算法就是将 $F_c$ 中的每一个依赖变成一个关系，最后再从关系集中去除重复重复的关系，即可得到一个3NF分解。该算法下分解是无损的（$\alpha\cap\beta =\emptyset$,否则 $\alpha\rightarrow\beta$ 中含有无关属性）。</p>
+<h3 id="2-6-第四范式（4NF）"><strong>2.6 第四范式（4NF）</strong></h3>
+<p>设 $\alpha\subset R$ ,$\beta\subset R$ 若 $\alpha$ 和 $\beta$ 之间的联系独立于 $\alpha$ 和 $R - \alpha$ 之间的联系，则会造成冗余。比如对于每一对 $\alpha\beta$ 需要重复储存 $R - \alpha$。（一个 $\alpha$ 分别对应多个 $\beta$ 和多个 $R - \alpha$ ）,而之前的范式并不能解决这种情况（一个 $\alpha$ 对应多个 $\beta$，这是函数依赖 $\alpha\rightarrow\beta$ 无法描述的）。</p>
+<p>为了解决这个问题，引入了 <strong>多值依赖</strong> 和 <strong>第四范式</strong>。<br>
+<strong>多值依赖：</strong> 设 $\alpha\subset R$ ,$\beta\subset R$ 若 $\alpha$ 和 $\beta$ 之间的联系独立于 $\alpha$ 和 $R - \alpha$ 之间的联系。则称多值依赖 $\alpha\rightarrow\rightarrow\beta$ 在 $R$ 上成立。这里的联系指一个 $\alpha$ 对应一个及以上 $\beta$。</p>
+<p>注意 $\alpha$ 和 $\beta$ 之间的联系独立于 $\alpha$ 和 $R - \alpha$ 之间的联系是指：若特定的 $\alpha_1$ 对应 n个 $\beta$ 和 m个 $R - \beta$,那么对于确定的 $\alpha _1 \beta _1$ 需要重复储存 m个 $R - \beta$，最终关系中与 $\alpha _1$ 相关的元组有 $m\times n$ 个。(比如一个特定的ID对应着多个电话和多个地址，那么对于每个ID和电话的值对，我们都需要重复储存所有的地址)</p>
+<p>于是，有如下性质：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>一个函数依赖也是一个多值依赖。</p>
+</li>
+<li class="lvl-2">
+<p>若 $\alpha\rightarrow\rightarrow\beta$ 则 $\alpha\rightarrow\rightarrow R-\alpha - \beta$</p>
+</li>
+</ul>
+<p><strong>平凡的多值依赖：</strong> 若 $\beta\subset\alpha$ 或 $\beta\cup\alpha = R$,则 $\alpha\rightarrow\rightarrow\beta$ 是平凡的。</p>
+<p><strong>第四范式：</strong> $D$ 是函数依赖和多值依赖集，$R$ 是第四范式的条件是 $D^+$ 里所有的 $\alpha\rightarrow\rightarrow\beta$ 都满足至少一条：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$\alpha\rightarrow\rightarrow\beta$ 是平凡的</p>
+</li>
+<li class="lvl-2">
+<p>$\alpha$ 是超码<br>
+于是4NF 一定是 BCNF。</p>
+</li>
+</ul>
+<p>令 $R_1 R_2 R_3 … R_n$ 是 $R$ 的一个分解， $D_i$ 是 $R_i$ 上限定。$D_i$ 包括：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$D^+$ 中所有只含 $R_i$ 中属性的函数依赖。</p>
+</li>
+<li class="lvl-2">
+<p>$D^+$ 中所有形如 $\alpha\rightarrow\rightarrow\beta\cap R_i$ 的多值依赖，其中 $\alpha\subset R_i$</p>
+</li>
+</ul>
+<p><strong>多值依赖的无损分解：</strong> 若 $R_1$ $R_2$ 是 $R$ 的一个分解，那么该分解是无损的充要条件是下面两个多值依赖至少有一个在 $D^+$ 中:</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$R_1 \cap R_2 \rightarrow\rightarrow R_1$</p>
+</li>
+<li class="lvl-2">
+<p>$R_1 \cap R_2 \rightarrow\rightarrow R_2$</p>
+</li>
+</ul>
+<p>这个结论比之前那个无损分解的结论强，但要注意一点，$\alpha\rightarrow\rightarrow\beta\gamma$ 不能推出 $\alpha\rightarrow\rightarrow\beta$ 所以不能像之前的结论一样简单验证依赖在 $R_i$ 上是否成立，必须保证依赖在 $D^+$ 中。</p>
+<p><strong>4NF分解算法：</strong><br>
+<img src="/image_md/4NF_decomposition.png" alt=""><br>
+这个分解是无损的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08-21/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B5%EF%BC%88part2%EF%BC%89/" rel="prev" title="数据库系统概念（part2）">
+      <i class="fa fa-chevron-left"></i> 数据库系统概念（part2）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08-24/%E6%89%8B%E5%8A%A8%E6%8C%A1%E6%B1%BD%E8%BD%A6%E6%8D%A2%E6%8C%A1%E5%8E%9F%E5%88%99/" rel="next" title="手动挡汽车换挡原则及简单原理">
+      手动挡汽车换挡原则及简单原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">数据库设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.</span> <span class="nav-text">核心内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#E-R%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">E-R模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%AE%9E%E4%BD%93-%E8%81%94%E7%B3%BB%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 实体-联系模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-E-R%E5%9B%BE"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 E-R图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">1.2.1 基本结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-%E5%BC%B1%E5%AE%9E%E4%BD%93%E9%9B%86"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">1.2.2 弱实体集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-%E5%A4%A7%E5%AD%A6%E7%9A%84E-R%E5%9B%BE"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">1.2.3 大学的E-R图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-E-R%E6%A8%A1%E5%9E%8B%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.3 E-R模型转化为关系模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1-%E7%AE%80%E5%8D%95%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">1.3.1 简单转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2-%E6%A8%A1%E5%BC%8F%E5%90%88%E5%B9%B6"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">1.3.2 模式合并</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E4%B8%8E%E8%8C%83%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">数据库设计与范式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E8%AE%BE%E8%AE%A1%E9%80%89%E6%8B%A9"><span class="nav-number">1.3.1.</span> <span class="nav-text">2.1 设计选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8E%9F%E5%AD%90%E5%9F%9F%E4%B8%8E%E7%AC%AC%E4%B8%80%E8%8C%83%E5%BC%8F"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.2 原子域与第一范式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%87%BD%E6%95%B0%E4%BE%9D%E8%B5%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">2.3 函数依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1-%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">2.3.1 定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2-Armstrong%E5%85%AC%E7%90%86%EF%BC%9A"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">2.3.2 Armstrong公理：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-3-%E5%B1%9E%E6%80%A7%E9%9B%86%E4%B8%8A%E7%9A%84%E9%97%AD%E5%8C%85"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">2.3.3 属性集上的闭包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-4-%E6%AD%A3%E5%88%99%E8%A6%86%E7%9B%96"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">2.3.4 正则覆盖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-5-%E6%97%A0%E6%8D%9F%E5%88%86%E8%A7%A3"><span class="nav-number">1.3.3.5.</span> <span class="nav-text">2.3.5 无损分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-6-%E4%BE%9D%E8%B5%96%E4%BF%9D%E6%8C%81"><span class="nav-number">1.3.3.6.</span> <span class="nav-text">2.3.6 依赖保持</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Boyce-Codd-%E8%8C%83%E5%BC%8F%EF%BC%88BCNF%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">2.4 Boyce-Codd 范式（BCNF）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-1-%E5%88%A4%E6%96%ADBCNF"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">2.4.1 判断BCNF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-2-BCNF%E5%88%86%E8%A7%A3"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">2.4.2 BCNF分解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E7%AC%AC%E4%B8%89%E8%8C%83%E5%BC%8F%EF%BC%883NF%EF%BC%89"><span class="nav-number">1.3.5.</span> <span class="nav-text">2.5 第三范式（3NF）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E7%AC%AC%E5%9B%9B%E8%8C%83%E5%BC%8F%EF%BC%884NF%EF%BC%89"><span class="nav-number">1.3.6.</span> <span class="nav-text">2.6 第四范式（4NF）</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HLI5KY"
+      src="/images/holo.jpg">
+  <p class="site-author-name" itemprop="name">HLI5KY</p>
+  <div class="site-description" itemprop="description">英雄可不能临阵脱逃啊</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2023 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa cus_bobow"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HLI5KY</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script>addEventListener("DOMContentLoaded",function(){let models=[{scale:0.35,width:320,height:500,right:"0px",bottom:"0px",pierceThrough:true,role:"https://cdn.jsdelivr.net/gh/HLI5KY/live2d_youmu@1,0/youmu.model3.json",background:"",opacity:1,mobile:false,draggable:false,},];new Live2dLoader(models)})</script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine@latest/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'j0sfuwsqxIJuyfYfn7XeFO0Z-gzGzoHsz',
+      appKey     : 'P65ULLrIZTYKVKvNz6rVUH6t',
+      placeholder: "留下你的足迹...",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : '',
+      emojiCDN   : '//cdn.jsdelivr.net/gh/hyc1230/qqemoji/',
+      emojiMaps  : {
+        "qq_1"	:	"am.gif",
+        "qq_2"	:	"azgc.gif",
+        "qq_3"	:	"baiy.gif",
+        "qq_4"	:	"banzz.gif",
+        "qq_5"	:	"bs.gif",
+        "qq_6"	:	"bz.gif",
+        "qq_7"	:	"cg.gif",
+        "qq_8"	:	"ch.gif",
+        "qq_9"	:	"cs.gif",
+        "qq_10"	:	"cy.gif",
+        "qq_11"	:	"dk.gif",
+        "qq_12"	:	"doge.gif",
+        "qq_13"	:	"dy.gif",
+        "qq_14"	:	"emm.gif",
+        "qq_15"	:	"fd.gif",
+        "qq_16"	:	"fendou.gif",
+        "qq_17"	:	"gz.gif",
+        "qq_18"	:	"hanx.gif",
+        "qq_19"	:	"hhd.gif",
+        "qq_20"	:	"hq.gif",
+        "qq_21"	:	"huaix.gif",
+        "qq_22"	:	"hx.gif",
+        "qq_23"	:	"jiaybs.gif",
+        "qq_24"	:	"jie.gif",
+        "qq_25"	:	"jx.gif",
+        "qq_26"	:	"jy.gif",
+        "qq_27"	:	"ka.gif",
+        "qq_28"	:	"kb.gif",
+        "qq_29"	:	"kel.gif",
+        "qq_30"	:	"kk.gif",
+        "qq_31"	:	"kuk.gif",
+        "qq_32"	:	"kun.gif",
+        "qq_33"	:	"kzht.gif",
+        "qq_34"	:	"lb.gif",
+        "qq_35"	:	"lengh.gif",
+        "qq_36"	:	"lh.gif",
+        "qq_37"	:	"ll.gif",
+        "qq_38"	:	"lyj.gif",
+        "qq_39"	:	"mdfq.gif",
+        "qq_40"	:	"mm.gif",
+        "qq_41"	:	"ng.gif",
+        "qq_42"	:	"nkt.gif",
+        "qq_43"	:	"oy.gif",
+        "qq_44"	:	"px.gif",
+        "qq_45"	:	"pz.gif",
+        "qq_46"	:	"qd.gif",
+        "qq_47"	:	"qiao.gif",
+        "qq_48"	:	"qq.gif",
+        "qq_49"	:	"se.gif",
+        "qq_50"	:	"shui.gif",
+        "qq_51"	:	"sr.gif",
+        "qq_52"	:	"tp.gif",
+        "qq_53"	:	"ts.gif",
+        "qq_54"	:	"tt.gif",
+        "qq_55"	:	"tuu.gif",
+        "qq_56"	:	"tx.gif",
+        "qq_57"	:	"whl.gif",
+        "qq_58"	:	"wn.gif",
+        "qq_59"	:	"wq.gif",
+        "qq_60"	:	"wul.gif",
+        "qq_61"	:	"wx.gif",
+        "qq_62"	:	"wzm.gif",
+        "qq_63"	:	"xia.gif",
+        "qq_64"	:	"xjj.gif",
+        "qq_65"	:	"xk.gif",
+        "qq_66"	:	"xu.gif",
+        "qq_67"	:	"xyx.gif",
+        "qq_68"	:	"yhh.gif",
+        "qq_69"	:	"yiw.gif",
+        "qq_70"	:	"yun.gif",
+        "qq_71"	:	"yx.gif",
+        "qq_72"	:	"zhem.gif",
+        "qq_73"	:	"zhh.gif",
+        "qq_74"	:	"zhm.gif",
+        "qq_75"	:	"zj.gif",
+        "qq_76"	:	"zk.gif",
+        "qq_77"	:	"zyj.gif",
+        "qq_78"	:	"209.gif",
+        "qq_79"	:	"db.gif",
+        "qq_80"	:	"fn.gif",
+        "qq_81"	:	"gg.gif",
+        "qq_82"	:	"jiaybb.gif",
+        "qq_83"	:	"jk.gif",
+        "qq_84"	:	"kl.gif",
+        "qq_85"	:	"ty.gif",
+        "qq_86"	:	"wosl.gif",
+        "qq_87"	:	"xy.gif",
+        "qq_88"	:	"yb.gif",
+        "qq_89"	:	"youl.gif",
+        "qq_90"	:	"zt.gif",
+        "qq_91"	:	"aini.gif",
+        "qq_92"	:	"bq.gif",
+        "qq_93"	:	"bu.gif",
+        "qq_94"	:	"cj.gif",
+        "qq_95"	:	"gy.gif",
+        "qq_96"	:	"hd.gif",
+        "qq_97"	:	"qiang.gif",
+        "qq_98"	:	"qt.gif",
+        "qq_99"	:	"ruo.gif",
+        "qq_100"	:	"shl.gif",
+        "qq_101"	:	"ws.gif",
+        "qq_102"	:	"168.gif",
+        "qq_103"	:	"baojin.gif",
+        "qq_104"	:	"bp.gif",
+        "qq_105"	:	"cd.gif",
+        "qq_106"	:	"dao.gif",
+        "qq_107"	:	"dg.gif",
+        "qq_108"	:	"dl.gif",
+        "qq_109"	:	"dx.gif",
+        "qq_110"	:	"fade.gif",
+        "qq_111"	:	"fj.gif",
+        "qq_112"	:	"hb.gif",
+        "qq_113"	:	"hec.gif",
+        "qq_114"	:	"jh.gif",
+        "qq_115"	:	"kf.gif",
+        "qq_116"	:	"kg.gif",
+        "qq_117"	:	"lw.gif",
+        "qq_118"	:	"mg.gif",
+        "qq_119"	:	"pch.gif",
+        "qq_120"	:	"qidao.gif",
+        "qq_121"	:	"sa.gif",
+        "qq_122"	:	"shd.gif",
+        "qq_123"	:	"shq.gif",
+        "qq_124"	:	"shuai.gif",
+        "qq_125"	:	"xin.gif",
+        "qq_126"	:	"xs.gif",
+        "qq_127"	:	"yl.gif",
+        "qq_128"	:	"zhd.gif"        
+      }
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

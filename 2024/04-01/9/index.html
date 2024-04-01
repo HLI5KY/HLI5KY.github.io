@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/youmu-apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/youmu_32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/youmu_16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hli5ky.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇笔记主要介绍$RE$到$DFA$的转化方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="将正则表达式(RE)转化成确定有限自动机(DFA)">
+<meta property="og:url" content="https://hli5ky.top/2024/04-01/9/index.html">
+<meta property="og:site_name" content="白玉楼">
+<meta property="og:description" content="这篇笔记主要介绍$RE$到$DFA$的转化方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-00.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-01.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-02.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-03.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-04.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-05.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-06.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-08.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-07.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-09.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-10.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-11.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-13.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-14.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-15.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-16.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-12.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-17.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-18.png">
+<meta property="og:image" content="https://hli5ky.top/image_md/9-19.png">
+<meta property="article:published_time" content="2024-04-01T14:56:34.000Z">
+<meta property="article:modified_time" content="2024-04-01T15:31:34.865Z">
+<meta property="article:author" content="HLI5KY">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hli5ky.top/image_md/9-00.png">
+
+<link rel="canonical" href="https://hli5ky.top/2024/04-01/9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script>
+  <title>将正则表达式(RE)转化成确定有限自动机(DFA) | 白玉楼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  
+
+    
+
+    
+
+  <div class="site-nav-right">
+    
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+    <li class="logo-item" style="vertical-align:bottom;">  
+              <a href="/">
+                <i>
+                  <img  class="custom-logo-image" src="/images/youmu_logo.png" alt="白玉楼" style="opacity: 1;transform: translateY(0px);">
+                </i>
+              </a>
+    </li>
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN" >
+    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2024/04-01/9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/holo.jpg">
+      <meta itemprop="name" content="HLI5KY">
+      <meta itemprop="description" content="英雄可不能临阵脱逃啊">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="白玉楼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          将正则表达式(RE)转化成确定有限自动机(DFA)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-04-01 22:56:34 / 修改时间：23:31:34" itemprop="dateCreated datePublished" datetime="2024-04-01T22:56:34+08:00">2024-04-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">编译原理</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/04-01/9/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/04-01/9/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇笔记主要介绍$RE$到$DFA$的转化方法。</p>
+<span id="more"></span>
+<ul class="lvl-0">
+<li class="lvl-2"><a href="#rerightarrow-nfarightarrow-dfa">$RE \rightarrow NFA \rightarrow DFA$</a>
+<ul class="lvl-2">
+<li class="lvl-4"><a href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86">前置知识</a></li>
+<li class="lvl-4"><a href="#%E6%B1%A4%E6%99%AE%E6%A3%AE%E6%9E%84%E9%80%A0%E6%B3%95">汤普森构造法</a>
+<ul class="lvl-4">
+<li class="lvl-6"><a href="#%E6%B1%A4%E6%99%AE%E6%A3%AE%E6%9E%84%E9%80%A0%E6%B3%95%E7%9A%84%E8%A7%84%E5%88%99">汤普森构造法的规则</a></li>
+<li class="lvl-6"><a href="#%E6%B1%A4%E6%99%AE%E6%A3%AE%E6%9E%84%E9%80%A0%E6%B3%95%E7%9A%84%E5%AE%9E%E4%BE%8B">汤普森构造法的实例</a></li>
+</ul>
+</li>
+<li class="lvl-4"><a href="#%E5%AD%90%E9%9B%86%E6%9E%84%E9%80%A0%E6%B3%95">子集构造法</a>
+<ul class="lvl-4">
+<li class="lvl-6"><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li class="lvl-6"><a href="#%E5%AE%9E%E4%BE%8B">实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="lvl-2"><a href="#rerightarrow-dfa">$RE \rightarrow DFA$</a>
+<ul class="lvl-2">
+<li class="lvl-4"><a href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-1">前置知识</a></li>
+<li class="lvl-4"><a href="#%E7%9B%B4%E6%8E%A5%E6%9E%84%E9%80%A0%E6%B3%95">直接构造法</a></li>
+</ul>
+</li>
+</ul>
+<h1>$RE\rightarrow NFA\rightarrow DFA$</h1>
+<h2 id="前置知识">前置知识</h2>
+<p>$RE$：正则表达式（Regular Expression），用简单的规则表示符合一定特征的所有字符串。一般一个正则表达式由以下元素构成（小写字母代表一般字符）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">符号</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">$\epsilon$</td>
+<td style="text-align:left">空字符</td>
+</tr>
+<tr>
+<td style="text-align:left">$ab$</td>
+<td style="text-align:left">连接</td>
+</tr>
+<tr>
+<td style="text-align:left">$a|b$</td>
+<td style="text-align:left">或</td>
+</tr>
+<tr>
+<td style="text-align:left">$a^*$</td>
+<td style="text-align:left">克林闭包，表示重复零次或多次</td>
+</tr>
+<tr>
+<td style="text-align:left">$a^+$</td>
+<td style="text-align:left">正闭包，表示至少重复一次</td>
+</tr>
+</tbody>
+</table>
+<p>例： 正则表达式为$a(b|c)(\epsilon|d)e^*$</p>
+<p>那么字符串 $abe$，$abeee$，$acd$是合法的，字符串$abc$，$bad$ 是非法的。</p>
+<hr>
+<p>$DFA$: 确定有限状态自动机（Deterministic Finite Automaton）,对于每一个状态的一个确定输入，只会跳转到唯一的状态，且不包含空迁移的有限状态自动机。</p>
+<p>例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-00.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图1</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>$NFA$:非确定有限状态自动机(Nondeterministic Finite Automaton),包含空迁移($\epsilon$迁移)或在一个确定输入下会跳转到一个以上状态的有限状态自动机。</p>
+<p>例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-01.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图2</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>$\epsilon-Closure(s)$: $s$是一个状态，$\epsilon-Closure(s)$ 表示$NFA$中状态$s$通过空迁移所能到达的状态的集合。显然，$s\in \epsilon-Closure(s)$。</p>
+<p>算法：</p>
+<ol>
+<li class="lvl-3">
+<p>初始化队列$Q$ 和结果集$R$</p>
+</li>
+<li class="lvl-3">
+<p>将$s$加入队列</p>
+</li>
+<li class="lvl-3">
+<p>在$NFA$中寻找队列首元素通过一次空迁移能到达的状态，将这些状态加入队列。</p>
+</li>
+<li class="lvl-3">
+<p>将队列首元素弹出至结果集$R$。</p>
+</li>
+<li class="lvl-3">
+<p>重复步骤3、4直到队列为空。</p>
+</li>
+</ol>
+<p>例：计算$\epsilon-Closure(0)$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-02.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图3</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:center">$Q$</th>
+<th style="text-align:center">$R$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">${ }$</td>
+<td style="text-align:center">${ }$</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">${0}$</td>
+<td style="text-align:center">${ }$</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">${1,7}$</td>
+<td style="text-align:center">${0}$</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">${7,2,4}$</td>
+<td style="text-align:center">${0,1}$</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">${2,4}$</td>
+<td style="text-align:center">${0,1,7}$</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">${4}$</td>
+<td style="text-align:center">${0,1,7,2}$</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">${ }$</td>
+<td style="text-align:center">${0,1,7,2,4}$</td>
+</tr>
+<tr>
+<td style="text-align:center">$\epsilon-Closure(0) = {0,1,2,4,7}$</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>$\epsilon-Closure(T)$:$T$是状态的集合,$\epsilon-Closure(T)$就是对$T$中的所有元素求$\epsilon-Closure$。</p>
+<hr>
+<p>$move(S,a)$:$S$是状态（或状态的集合），$a$是字符,$move(S,a)$表示状态$S$在输入为$a$时跳转到的状态的集合。</p>
+<p>算法：</p>
+<ol>
+<li class="lvl-3">
+<p>初始化队列$Q$ 和结果集$R$</p>
+</li>
+<li class="lvl-3">
+<p>将$S$中的元素加入队列$Q$</p>
+</li>
+<li class="lvl-3">
+<p>在$NFA$中寻找队列$Q$首元素通过一次输入$a$能到达的状态，将这些状态加入结果集$R$。</p>
+</li>
+<li class="lvl-3">
+<p>将队列首元素弹出。</p>
+</li>
+<li class="lvl-3">
+<p>重复步骤3、4直到队列$Q$为空。</p>
+</li>
+<li class="lvl-3">
+<p>计算$\epsilon-Closure®$</p>
+</li>
+</ol>
+<p>例：记图3中$\epsilon-Closure(0) = {0,1,2,4,7} = S_0$，计算$move(S_0,a)$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:center">$Q$</th>
+<th style="text-align:center">$R$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">${ }$</td>
+<td style="text-align:center">${ }$</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">${0,1,2,4,7}$</td>
+<td style="text-align:center">${ }$</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">${1,2,4,7}$</td>
+<td style="text-align:center">${}$</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">${2,4,7}$</td>
+<td style="text-align:center">${}$</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">${4,7}$</td>
+<td style="text-align:center">${3}$</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">${7}$</td>
+<td style="text-align:center">${3}$</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">${ }$</td>
+<td style="text-align:center">${3,8}$</td>
+</tr>
+<tr>
+<td style="text-align:center">$\epsilon-Closure® = {3,6,1,7,2,4,8}$</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>故$move(S_0,a) = {1,2,3,4,6,7,8}$</p>
+<hr>
+<p>$move(S,\Sigma)$:$s$是状态，$\Sigma$是$RE$中出现的所有字符的集合（合法字符集）。</p>
+<h2 id="汤普森构造法">汤普森构造法</h2>
+<p>汤普森构造法实现的是$RE\rightarrow NFA$的转化，其核心思想是通过特定的$NFA$范式来替换构成$RE$的基本元素。</p>
+<h3 id="汤普森构造法的规则">汤普森构造法的规则</h3>
+<ol>
+<li class="lvl-3">
+<p>$\epsilon$</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-03.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图4</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li class="lvl-3">
+<p>$a$</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-04.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图5</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li class="lvl-3">
+<p>$s|t$，$N(s),N(t)$表示子表达式$s$和$t$的$NFA$。椭圆左部圆圈表示开始状态，右部圆圈表示接受状态。</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-05.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图6</td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li class="lvl-3">
+<p>$st$</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-06.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图7</td>
+</tr>
+</tbody>
+</table>
+<p>例：$ab$的$NFA$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-08.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图8</td>
+</tr>
+</tbody>
+</table>
+<ol start="5">
+<li class="lvl-3">
+<p>$s*$</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-07.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图9</td>
+</tr>
+</tbody>
+</table>
+<ol start="6">
+<li class="lvl-3">
+<p>$s<sup>+$可以写成$ss</sup>*$，此处按下不表。</p>
+</li>
+</ol>
+<h3 id="汤普森构造法的实例">汤普森构造法的实例</h3>
+<p>将$RE$拆解成一个个子表达式，再使用上述规则替换子表达式。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-09.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图10</td>
+</tr>
+</tbody>
+</table>
+<h2 id="子集构造法">子集构造法</h2>
+<p>子集构造法实现的是$NFA \rightarrow DFA$的转化，其核心思想将一组能通过空迁移到达的状态合并为一个状态。</p>
+<h3 id="原理">原理</h3>
+<p>一般而言$NFA$的不确定性来自两个方面，一方面是$NFA$支持空迁移，一方面是$NFA$支持同一输入下输出不同。而用汤普森构造法生成的$NFA$在一个输入下只有唯一的一个输出，也就是说，要实现$NFA \rightarrow DFA$的转化，我们只需要消除空迁移带来的不确定性。</p>
+<p>消除空迁移的基本方法是计算开始状态的$\epsilon-Closure$将结果集当成一个新的开始状态，记为$S$，从该状态开始计算$move(S,\Sigma)$将结果作为新的状态。包含接受状态的状态为新的接受状态。</p>
+<h3 id="实例">实例</h3>
+<p>将图10所示$NFA$转化成$DFA$。</p>
+<ol>
+<li class="lvl-3">
+<p>$\epsilon-Closure(0) =\epsilon-Closure({0}) ={0,1,2,4,7} = S_0$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_0,a) = \epsilon-Closure({3,8})={1,2,3,4,6,7,8} = S_1$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_0,b) = \epsilon-Closure({5})={1,2,4,5,6,7} = S_2$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_1,a) = \epsilon-Closure({3,8})= S_1$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_1,b) = \epsilon-Closure({5,9})={1,2,4,5,6,7,9} = S_3$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_2,a) = \epsilon-Closure({3,8})= S_1$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_2,b) = \epsilon-Closure({5})=S_2$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_3,a) = \epsilon-Closure({3,8})= S_1$</p>
+</li>
+<li class="lvl-3">
+<p>$move(S_3,b) = \epsilon-Closure({5,10})={1,2,4,5,6,7,10} = S_4$</p>
+</li>
+<li class="lvl-4">
+<p>$move(S_4,a) = \epsilon-Closure({3,8})= S_1$</p>
+</li>
+<li class="lvl-4">
+<p>$move(S_4,b) = \epsilon-Closure({5}) =S_2$</p>
+</li>
+<li class="lvl-4">
+<p>没有产生新状态，计算结束，接受状态为$S_4$。</p>
+</li>
+</ol>
+<p>$DFA$状态转移表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">$a$</th>
+<th style="text-align:center">$b$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">$\rightarrow S_0$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_2$</td>
+</tr>
+<tr>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_3$</td>
+</tr>
+<tr>
+<td style="text-align:center">$S_2$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_2$</td>
+</tr>
+<tr>
+<td style="text-align:center">$S_3$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_4$</td>
+</tr>
+<tr>
+<td style="text-align:center">$*S_4$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_2$</td>
+</tr>
+</tbody>
+</table>
+<p>$DFA$状态转移图</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-10.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图11</td>
+</tr>
+</tbody>
+</table>
+<h1>$RE\rightarrow DFA$</h1>
+<h2 id="前置知识-2">前置知识</h2>
+<p>$语法树$：$Syntax \space Tree$，以树的形式表示一个$RE$，对该树进行中序遍历即可复原出$RE$。</p>
+<p>例如：$(a|b)^*a$ 的语法树如下</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-11.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图12</td>
+</tr>
+</tbody>
+</table>
+<p>在语法树中将叶子节点从左至右标上号作为该字符的位置，这个位置将会用于后面的直接构造法，之后会做详细解释。</p>
+<p>注：$\bullet$ 表示连接，一般在$RE$中是省略的。</p>
+<p>算法：</p>
+<ol>
+<li class="lvl-3">
+<p>从左至右找到$RE$中第一个运算符$t$</p>
+</li>
+<li class="lvl-3">
+<p>将$t$左右两侧的字符加入以$t$为根节点的子树$T$用于替代$RE$中的对应字符（$t$右侧为运算符则$T$的右子树为$\epsilon$）</p>
+</li>
+<li class="lvl-3">
+<p>重复步骤2直到所有字符被加入树中。</p>
+</li>
+<li class="lvl-3">
+<p>剔除$\epsilon$分支</p>
+</li>
+</ol>
+<p>例：画出$(a|b)^*a$ 的语法树</p>
+<ol>
+<li class="lvl-3">
+<p>$(a|b)^*a \rightarrow {T_1}^*a$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-13.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图13</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="lvl-3">
+<p>${T_1}^*a \rightarrow {T_2} \bullet a$ （${T_1}^<em>a = {T_1}^</em>  \bullet a$）</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-14.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图14</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="lvl-3">
+<p>${T_2} \bullet a \rightarrow T_3$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-15.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图15</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="lvl-3">
+<p>消除$\epsilon$分支</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-16.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图16</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<hr>
+<p>$firstpos(n)$:表示语法分析树中以$n$为根节点的子树所能生成的字符串的首字符的位置集合。</p>
+<p>例如：图12中$“|”$对应的$RE$为$a|b$，则$firstpos(|) = {1,2}$。</p>
+<p>注：若语法树中包含多个 $“|”$ ，则这些 $“|”$ 并不等价，或者说每个运算符都是独一无二的。</p>
+<p>$lastpos(n)$：表示语法分析树中以$n$为根节点的子树所对应的$RE$所能生成的字符串的末尾字符的位置集合。</p>
+<p>$nullable(n)$：若语法分析树中以$n$为根节点的子树能生成空串($\epsilon$)则为$true$,否则为$false$。</p>
+<p>计算方法：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-12.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图17</td>
+</tr>
+</tbody>
+</table>
+<p>这个方法应该是十分易于理解的，不多作赘述。</p>
+<hr>
+<p>$followpos(i)$:表示第$i$个位置后面可能接的字符的集合。由于在$RE$中与顺序相关的运算符只有$\bullet$和$*$故只用考虑这两个运算符即可获得所有位置的$followpos$集。</p>
+<p>计算方法：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>$\bullet$:对于$c_1 \bullet c_2$，所有的$i \in lastpos(c_1)$ 有 $firstpos(c_2) \subseteq followpos(i)$</p>
+</li>
+<li class="lvl-2">
+<p>$<em>$:对于${c_1}^</em>$，所有的$i \in lastpos(c_1)$ 有 $firstpos(c_1) \subseteq followpos(i)$</p>
+</li>
+</ul>
+<hr>
+<p>$move(S,a)$:$S$是状态（或状态的集合），$a$是字符,$move(S,a)$表示状态$S$在输入为$a$时跳转到的状态的集合。</p>
+<p>计算方法：<br>
+$move(S,a) = followpos(s_1) \cup followpos(s_2) \cup … \cup followpos(s_n)$，其中$s_i$表示$S$中所有表示字符$a$的位置。</p>
+<p>例如：在图12中$move(S,a) = followpos(1) \cup followpos(3)$ （假设${1,3} \sube S$）</p>
+<p>$move(S,\Sigma)$:$S$是状态，$\Sigma$是$RE$中出现的所有字符的集合（合法字符集）。</p>
+<h2 id="直接构造法">直接构造法</h2>
+<p>直接构造法实现的是$RE \rightarrow DFA$ 的转化。</p>
+<p>步骤：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>设要构造的$RE$为$r$，在$r$添加结束符#。</p>
+</li>
+<li class="lvl-2">
+<p>构造$r$#的语法树，若语法树正确，所有叶子节点应该都是字符表中的符号或#，所有的非叶节点都是运算符。</p>
+</li>
+<li class="lvl-2">
+<p>在语法树中从左至右为所有叶子节点（包括#但不包括$\epsilon$）标上序号。</p>
+</li>
+<li class="lvl-2">
+<p>在语法树中为每个节点$n$求出$firstpos(n)$、$lastpos(n)$以及$nullable(n)$</p>
+</li>
+<li class="lvl-2">
+<p>为语法树中的每个位置$i$，求出$followpos(i)$</p>
+</li>
+<li class="lvl-2">
+<p>设语法树的根节点为$root$，将$firstpos(root)$作为初始状态$S_0$</p>
+</li>
+<li class="lvl-2">
+<p>计算$move(S_0,\Sigma)$，若产生新状态$S$则继续计算$move(S,\Sigma)$</p>
+</li>
+<li class="lvl-2">
+<p>重复上一步直到不再有新状态产生，所有包含#的状态为接受状态，$DFA$构造完成。</p>
+</li>
+</ul>
+<p>实例：将$(a|b)^*a$转化成DFA</p>
+<ol>
+<li class="lvl-3">
+<p>添加结束符：$(a|b)^*a$#</p>
+</li>
+<li class="lvl-3">
+<p>构造语法树并标号：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-17.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图18</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="lvl-3">
+<p>在语法树中为每个节点$n$求出$firstpos(n)$、$lastpos(n)$以及$nullable(n)$：其中紫色为$firstpos$，蓝色为$lastpos$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-18.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图19</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="lvl-3">
+<p>求$followpos$:</p>
+<ol>
+<li class="lvl-7">$followpos(1) = {1,2,3}$</li>
+<li class="lvl-7">$followpos(2) = {1,2,3}$</li>
+<li class="lvl-7">$followpos(3) = {4}$</li>
+<li class="lvl-7">$followpos(4) = {}$</li>
+</ol>
+</li>
+<li class="lvl-3">
+<p>根据图19$firstpos(root) = {1,2,3} = S_0$</p>
+</li>
+<li class="lvl-3">
+<p>计算$move$:</p>
+<ol>
+<li class="lvl-6">$move(S_0,a) = followpos(1) \cup followpos(3) = {1,2,3,4} = S_1$</li>
+<li class="lvl-7">$move(S_0,b) = followpos(2) = {1,2,3} = S_0$</li>
+<li class="lvl-7">$move(S_1,a) = followpos(1) \cup followpos(3) = S_1$</li>
+<li class="lvl-7">$move(S_1,b) = followpos(2) = S_0$</li>
+</ol>
+</li>
+<li class="lvl-3">
+<p>无新状态产生，构造结束，接受状态为$S_1$</p>
+</li>
+</ol>
+<p>$DFA$状态转移表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">$a$</th>
+<th style="text-align:center">$b$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">$\rightarrow S_0$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_0$</td>
+</tr>
+<tr>
+<td style="text-align:center">$*S_0$</td>
+<td style="text-align:center">$S_1$</td>
+<td style="text-align:center">$S_0$</td>
+</tr>
+</tbody>
+</table>
+<p>$DFA$状态转移图</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/image_md/9-19.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">图20</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11-28/6/" rel="prev" title="在Android中监控WiFi变化">
+      <i class="fa fa-chevron-left"></i> 在Android中监控WiFi变化
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">$RE\rightarrow NFA\rightarrow DFA$</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%A4%E6%99%AE%E6%A3%AE%E6%9E%84%E9%80%A0%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">汤普森构造法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%A4%E6%99%AE%E6%A3%AE%E6%9E%84%E9%80%A0%E6%B3%95%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-number">1.2.1.</span> <span class="nav-text">汤普森构造法的规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%A4%E6%99%AE%E6%A3%AE%E6%9E%84%E9%80%A0%E6%B3%95%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">汤普森构造法的实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E9%9B%86%E6%9E%84%E9%80%A0%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">子集构造法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.3.2.</span> <span class="nav-text">实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">$RE\rightarrow DFA$</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-2"><span class="nav-number">2.1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%9E%84%E9%80%A0%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">直接构造法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HLI5KY"
+      src="/images/holo.jpg">
+  <p class="site-author-name" itemprop="name">HLI5KY</p>
+  <div class="site-description" itemprop="description">英雄可不能临阵脱逃啊</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2023 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa cus_bobow"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HLI5KY</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+<div class="moeICP">
+<a href="https://icp.gov.moe/?keyword=20240108" target="_blank">萌ICP备20240108号</a>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script>addEventListener("DOMContentLoaded",function(){let models=[{scale:0.35,width:320,height:500,right:"0px",bottom:"0px",pierceThrough:true,role:"https://cdn.jsdelivr.net/gh/HLI5KY/live2d_youmu@1,0/youmu.model3.json",background:"",opacity:1,mobile:false,draggable:false,},];new Live2dLoader(models)})</script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine@latest/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'j0sfuwsqxIJuyfYfn7XeFO0Z-gzGzoHsz',
+      appKey     : 'P65ULLrIZTYKVKvNz6rVUH6t',
+      placeholder: "留下你的足迹...",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : '',
+      emojiCDN   : '//cdn.jsdelivr.net/gh/hyc1230/qqemoji/',
+      emojiMaps  : {
+        "qq_1"	:	"am.gif",
+        "qq_2"	:	"azgc.gif",
+        "qq_3"	:	"baiy.gif",
+        "qq_4"	:	"banzz.gif",
+        "qq_5"	:	"bs.gif",
+        "qq_6"	:	"bz.gif",
+        "qq_7"	:	"cg.gif",
+        "qq_8"	:	"ch.gif",
+        "qq_9"	:	"cs.gif",
+        "qq_10"	:	"cy.gif",
+        "qq_11"	:	"dk.gif",
+        "qq_12"	:	"doge.gif",
+        "qq_13"	:	"dy.gif",
+        "qq_14"	:	"emm.gif",
+        "qq_15"	:	"fd.gif",
+        "qq_16"	:	"fendou.gif",
+        "qq_17"	:	"gz.gif",
+        "qq_18"	:	"hanx.gif",
+        "qq_19"	:	"hhd.gif",
+        "qq_20"	:	"hq.gif",
+        "qq_21"	:	"huaix.gif",
+        "qq_22"	:	"hx.gif",
+        "qq_23"	:	"jiaybs.gif",
+        "qq_24"	:	"jie.gif",
+        "qq_25"	:	"jx.gif",
+        "qq_26"	:	"jy.gif",
+        "qq_27"	:	"ka.gif",
+        "qq_28"	:	"kb.gif",
+        "qq_29"	:	"kel.gif",
+        "qq_30"	:	"kk.gif",
+        "qq_31"	:	"kuk.gif",
+        "qq_32"	:	"kun.gif",
+        "qq_33"	:	"kzht.gif",
+        "qq_34"	:	"lb.gif",
+        "qq_35"	:	"lengh.gif",
+        "qq_36"	:	"lh.gif",
+        "qq_37"	:	"ll.gif",
+        "qq_38"	:	"lyj.gif",
+        "qq_39"	:	"mdfq.gif",
+        "qq_40"	:	"mm.gif",
+        "qq_41"	:	"ng.gif",
+        "qq_42"	:	"nkt.gif",
+        "qq_43"	:	"oy.gif",
+        "qq_44"	:	"px.gif",
+        "qq_45"	:	"pz.gif",
+        "qq_46"	:	"qd.gif",
+        "qq_47"	:	"qiao.gif",
+        "qq_48"	:	"qq.gif",
+        "qq_49"	:	"se.gif",
+        "qq_50"	:	"shui.gif",
+        "qq_51"	:	"sr.gif",
+        "qq_52"	:	"tp.gif",
+        "qq_53"	:	"ts.gif",
+        "qq_54"	:	"tt.gif",
+        "qq_55"	:	"tuu.gif",
+        "qq_56"	:	"tx.gif",
+        "qq_57"	:	"whl.gif",
+        "qq_58"	:	"wn.gif",
+        "qq_59"	:	"wq.gif",
+        "qq_60"	:	"wul.gif",
+        "qq_61"	:	"wx.gif",
+        "qq_62"	:	"wzm.gif",
+        "qq_63"	:	"xia.gif",
+        "qq_64"	:	"xjj.gif",
+        "qq_65"	:	"xk.gif",
+        "qq_66"	:	"xu.gif",
+        "qq_67"	:	"xyx.gif",
+        "qq_68"	:	"yhh.gif",
+        "qq_69"	:	"yiw.gif",
+        "qq_70"	:	"yun.gif",
+        "qq_71"	:	"yx.gif",
+        "qq_72"	:	"zhem.gif",
+        "qq_73"	:	"zhh.gif",
+        "qq_74"	:	"zhm.gif",
+        "qq_75"	:	"zj.gif",
+        "qq_76"	:	"zk.gif",
+        "qq_77"	:	"zyj.gif",
+        "qq_78"	:	"209.gif",
+        "qq_79"	:	"db.gif",
+        "qq_80"	:	"fn.gif",
+        "qq_81"	:	"gg.gif",
+        "qq_82"	:	"jiaybb.gif",
+        "qq_83"	:	"jk.gif",
+        "qq_84"	:	"kl.gif",
+        "qq_85"	:	"ty.gif",
+        "qq_86"	:	"wosl.gif",
+        "qq_87"	:	"xy.gif",
+        "qq_88"	:	"yb.gif",
+        "qq_89"	:	"youl.gif",
+        "qq_90"	:	"zt.gif",
+        "qq_91"	:	"aini.gif",
+        "qq_92"	:	"bq.gif",
+        "qq_93"	:	"bu.gif",
+        "qq_94"	:	"cj.gif",
+        "qq_95"	:	"gy.gif",
+        "qq_96"	:	"hd.gif",
+        "qq_97"	:	"qiang.gif",
+        "qq_98"	:	"qt.gif",
+        "qq_99"	:	"ruo.gif",
+        "qq_100"	:	"shl.gif",
+        "qq_101"	:	"ws.gif",
+        "qq_102"	:	"168.gif",
+        "qq_103"	:	"baojin.gif",
+        "qq_104"	:	"bp.gif",
+        "qq_105"	:	"cd.gif",
+        "qq_106"	:	"dao.gif",
+        "qq_107"	:	"dg.gif",
+        "qq_108"	:	"dl.gif",
+        "qq_109"	:	"dx.gif",
+        "qq_110"	:	"fade.gif",
+        "qq_111"	:	"fj.gif",
+        "qq_112"	:	"hb.gif",
+        "qq_113"	:	"hec.gif",
+        "qq_114"	:	"jh.gif",
+        "qq_115"	:	"kf.gif",
+        "qq_116"	:	"kg.gif",
+        "qq_117"	:	"lw.gif",
+        "qq_118"	:	"mg.gif",
+        "qq_119"	:	"pch.gif",
+        "qq_120"	:	"qidao.gif",
+        "qq_121"	:	"sa.gif",
+        "qq_122"	:	"shd.gif",
+        "qq_123"	:	"shq.gif",
+        "qq_124"	:	"shuai.gif",
+        "qq_125"	:	"xin.gif",
+        "qq_126"	:	"xs.gif",
+        "qq_127"	:	"yl.gif",
+        "qq_128"	:	"zhd.gif"        
+      }
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

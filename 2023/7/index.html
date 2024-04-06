@@ -49,7 +49,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script>
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
   <title>Unity2d问题记录 | 白玉楼</title>
   
 
@@ -255,14 +255,15 @@
       
         <p>这篇笔记主要记录在使用Unity进行开发的过程中遇到的问题及解决方案以供参考。Unity版本为 2021.3.26.f1c1</p>
 <span id="more"></span>
-<h3 id="Unity-安卓应用-build-失败"><strong>Unity 安卓应用 build 失败</strong></h3>
+<h3 id="unity-安卓应用-build-失败"><a class="markdownIt-Anchor" href="#unity-安卓应用-build-失败"></a> <strong>Unity 安卓应用 build 失败</strong></h3>
 <p>在从Unity中导出apk时出现错误：</p>
-<p><img src="/image_md/unity_build_fail.png" alt="unity_build_fail"></p>
+<p><img src="/image_md/unity_build_fail.png" alt="unity_build_fail" /></p>
 <p>在众多报错的最后一条中有这样一句：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :launcher:transformClassesAndResourcesWithR8ForRelease FAILED</span><br></pre></td></tr></table></figure>
 <p>尝试修改gradle.property，但没有效果。经过无数次搜索和尝试后终于找到了原因，这个bug出在Unity的keystore中的密码错误。解决方案也很简单，新创建一个密码即可。流程如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File -&gt; Build Settings -&gt; Player Settings -&gt; Publishing Settings -&gt; keystore manager -&gt; keystore -&gt; create new</span><br></pre></td></tr></table></figure>
-<p>之后根据软件提示创建密码并将当前项目的密码设置好即可成功导出。参考：<a target="_blank" rel="noopener" href="https://forum.unity.com/threads/gradle-build-failed-solved.864856/">Gradle build failed</a></p>
+<p>之后根据软件提示创建密码并将当前项目的密码设置好即可成功导出。<br />
+参考：<a target="_blank" rel="noopener" href="https://forum.unity.com/threads/gradle-build-failed-solved.864856/">Gradle build failed</a></p>
 
     </div>
 
@@ -349,7 +350,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unity-%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8-build-%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.</span> <span class="nav-text">Unity 安卓应用 build 失败</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#unity-%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8-build-%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.</span> <span class="nav-text"> Unity 安卓应用 build 失败</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

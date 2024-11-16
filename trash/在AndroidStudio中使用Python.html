@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"hli5ky.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="我是一个手动挡驾驶苦手，由于不熟悉换挡时机，常常出现半坡起步熄火或换挡顿挫的尴尬场面，收获后方司机鸣笛一片。为了避免再陷入这种窘境，我参考了一些与手动挡驾驶相关的教程以及知乎大佬的文章 手动挡的车，1-5 挡各什么区别？什么时候该换挡？不同的路段该切换至什么档位？ 总结出换挡的原则与简单原理。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="手动挡汽车换挡原则及简单原理">
-<meta property="og:url" content="https://hli5ky.top/2023/8/index.html">
+  <meta name="description" content="由于安卓课程项目中需要用到Python的库，搜集资料后找到一个不错的方案，特记录一下。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="在AndroidStudio中使用Python">
+<meta property="og:url" content="https://hli5ky.top/trash/%E5%9C%A8AndroidStudio%E4%B8%AD%E4%BD%BF%E7%94%A8Python.html">
 <meta property="og:site_name" content="白玉楼">
-<meta property="og:description" content="我是一个手动挡驾驶苦手，由于不熟悉换挡时机，常常出现半坡起步熄火或换挡顿挫的尴尬场面，收获后方司机鸣笛一片。为了避免再陷入这种窘境，我参考了一些与手动挡驾驶相关的教程以及知乎大佬的文章 手动挡的车，1-5 挡各什么区别？什么时候该换挡？不同的路段该切换至什么档位？ 总结出换挡的原则与简单原理。">
+<meta property="og:description" content="由于安卓课程项目中需要用到Python的库，搜集资料后找到一个不错的方案，特记录一下。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-24T13:54:42.000Z">
-<meta property="article:modified_time" content="2024-03-24T13:24:35.734Z">
+<meta property="article:published_time" content="2023-10-31T08:54:42.000Z">
+<meta property="article:modified_time" content="2024-03-24T13:24:07.941Z">
 <meta property="article:author" content="HLI5KY">
-<meta property="article:tag" content="驾驶">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="安卓">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://hli5ky.top/2023/8/">
+<link rel="canonical" href="https://hli5ky.top/trash/%E5%9C%A8AndroidStudio%E4%B8%AD%E4%BD%BF%E7%94%A8Python">
 
 
 <script id="page-configurations">
@@ -41,12 +42,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true,
+    isPost : false,
     lang   : 'zh-CN'
   };
 </script>
-<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
-  <title>手动挡汽车换挡原则及简单原理 | 白玉楼</title>
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script><script src="https://cdn.jsdelivr.net/combine/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js,npm/pixi.js@6.5.2/dist/browser/pixi.min.js,npm/pixi-live2d-display/dist/index.min.js,gh/Weidows-projects/Live2dLoader/dist/Live2dLoader.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+  <title>在AndroidStudio中使用Python | 白玉楼
+</title>
   
 
 
@@ -163,156 +165,82 @@
       <div class="main-inner">
         <div class="content-wrap">
           
+  
+  
 
-          <div class="content post posts-expand">
+          <div class="content page posts-expand">
             
 
     
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN" >
-    <link itemprop="mainEntityOfPage" href="https://hli5ky.top/2023/8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/holo.jpg">
-      <meta itemprop="name" content="HLI5KY">
-      <meta itemprop="description" content="英雄可不能临阵脱逃啊">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="白玉楼">
-    </span>
+    
+    
+    <div class="post-block" lang="zh-CN">
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          手动挡汽车换挡原则及简单原理
-        </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+<h1 class="post-title" itemprop="name headline">在AndroidStudio中使用Python
+</h1>
 
-              <time title="创建时间：2023-08-24 21:54:42" itemprop="dateCreated datePublished" datetime="2023-08-24T21:54:42+08:00">2023-08-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-24 21:24:35" itemprop="dateModified" datetime="2024-03-24T21:24:35+08:00">2024-03-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8/" itemprop="url" rel="index"><span itemprop="name">日常</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8/%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">驾驶</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
+<div class="post-meta">
   
 
-        </div>
-      </header>
+</div>
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
-        <p>我是一个手动挡驾驶苦手，由于不熟悉换挡时机，常常出现半坡起步熄火或换挡顿挫的尴尬场面，收获后方司机鸣笛一片。为了避免再陷入这种窘境，我参考了一些与手动挡驾驶相关的教程以及知乎大佬的文章 <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/36650925/answer/68449422">手动挡的车，1-5 挡各什么区别？什么时候该换挡？不同的路段该切换至什么档位？</a> 总结出换挡的原则与简单原理。</p>
+      
+      
+      <div class="post-body">
+          <p>由于安卓课程项目中需要用到Python的库，搜集资料后找到一个不错的方案，特记录一下。</p>
 <span id="more"></span>
-<p>先说我总结的原则：<strong>发动机高转速升挡，低转速降挡补油，始终让发动机转速维持在一个特定区间。</strong></p>
-<p>这个原则是怎么来的呢？我们先来思考一个简单的手动挡汽车模型：</p>
-<ul>
-<li>发动机齿轮与变速箱齿轮相连，二者 <strong>线速度</strong> 相同，且二者转速相互影响</li>
-<li>变速箱齿轮与动力轮的轴相连，二者 <strong>角速度</strong> 相同，且二者转速相互影响</li>
-<li>变速箱齿轮半径与发动机齿轮半径之比称为 <strong>齿比</strong></li>
-<li>手动挡汽车挡位越高，齿比越小。</li>
-<li>齿比越大动力越强</li>
-<li>离合器的作用是分离发动机齿轮和变速箱齿轮。踩下离合，二者之间的相互影响减弱。</li>
-<li>踩油门提高发动机转速，不加油且踩下离合时发动机转速会趋于怠速（700~900转）</li>
-<li>发动机在特定转速区间下输出效率最高（最省油）</li>
-<li>通过刹车控制变速箱齿轮的转速</li>
-</ul>
-<p>真实的手动挡汽车模型会比这个复杂许多，这个模型只是帮助理解换挡的原则。</p>
-<h3 id="高转速升挡"><a class="markdownIt-Anchor" href="#高转速升挡"></a> 高转速升挡</h3>
-<p>当发动机处于高转速时，我们需要降低转速以保证较高的输出效率，但降低转速的同时不能影响汽车正常的行驶速度。一个最直接的办法就是踩下离合器，这样发动机转速会自然下降。但这会产生转速不匹配的问题，也就是说发动机转速下降了，但变速箱的速度还没变，如果这时松开离合就会导致汽车出现顿挫甚至于熄火。而解决这个问题的方法就是升挡。</p>
-<p>当挡位升高时，汽车速度行驶几乎没有变化（平地上），也就是说汽车动力轴的角速度不变。由于齿比降低，变速箱齿轮在相同的角速度下线速度降低，也就是说变速箱齿轮的转速降低了。而此时发动机齿轮和变速箱齿轮速度相匹配了，我们松开离合完成换挡就不会造成顿挫。</p>
-<h3 id="低转速降挡补油"><a class="markdownIt-Anchor" href="#低转速降挡补油"></a> 低转速降挡补油</h3>
-<p>当发动机处于低转速时，我们需要提高转速以保证较高的输出效率，一个直接的办法就是踩油门，但踩油门势必提高汽车行驶速度。那有没有不影响行驶速度又能提高发动机转速的方法呢？那当然是降挡补油了。</p>
-<p>有了高速状态的铺垫，降挡补油的操作就很好理解了。挡位下降时，变速箱齿轮转速提高，但由于踩下离合会使发动机转速降低，我们需要踩油门使发动机转速提高以匹配变速箱转速。如果直接降挡不进行补油操作，那发动机与变速箱转速差过大就会导致顿挫或熄火。</p>
-<h3 id="发动机转速与汽车行驶速度之间的关系"><a class="markdownIt-Anchor" href="#发动机转速与汽车行驶速度之间的关系"></a> 发动机转速与汽车行驶速度之间的关系</h3>
-<p>发动机转速和汽车行驶速度之间并不是一个一一对应的关系，但二者却是相互制约的。在挡位合适时，自然是发动机转速越快，汽车的行驶速度越快。而当挡位不合适时，就会出现动力不足或熄火等问题。接下来我们来分析一下常见的挡位不匹配。</p>
-<p>首先是高速低挡。通过上面的分析我们知道，高行驶速度下动力轴角速度快，而低挡位下变速箱齿轮转速快，这导致我们没踩油门时也会发现发动机转速明显上升；而当我们踩油门时由于低挡位下齿比大，发动机转速的提高并不能导致变速箱转速的明显提高，这就导致了驾驶时的动力不足。</p>
-<p>然后是低速高挡。低行驶速度下动力轴角速度慢，高挡位下变速箱转速慢，不踩油门时发动机转速会明显降低。如果行驶速度下降到一个阈值，导致变速箱转速过于慢就会导致发动机的转速过慢以至于熄火。</p>
-<p>正是由于汽车行驶速度与发动机转速之间的密切联系，在一些驾校中教练会让学员通过速度来判断换挡的时机。但实际上，通过发动机转速来判断换挡时机会更为合理（更贴近本质）。</p>
-<h3 id="一点题外话离合器的使用"><a class="markdownIt-Anchor" href="#一点题外话离合器的使用"></a> 一点题外话：离合器的使用</h3>
-<p>手动挡驾驶的一个难点就是离合器的使用，虽然很多时候踩离合只是一个换挡的前置动作，并没有什么技术含量。但当遇到半坡起步时离合控制的重要性就凸显出来了。</p>
-<p>离合器的作用主要是隔开发动机和变速箱，是二者之间的相互影响减弱，便于换挡或起步。在半坡起步时，由于重力的作用动发动机会需要更大的力使汽车向前行驶。这就需要在半离合状态下加油，同时配合油门抬离合器。如果抬太慢，发动机和变速箱之间的结合不够紧密，再怎么加油也是隔靴搔痒；抬太快发动机的力不足以克服阻力，与变速箱结合后发动机转速迅速下降就直接熄火了。这个其实没有什么窍门，只能多开多练习。</p>
-<p>我以后一定买一辆自动挡的车QAQ。</p>
+<h2 id="安装chaquopy"><a class="markdownIt-Anchor" href="#安装chaquopy"></a> 安装Chaquopy</h2>
+<ol>
+<li>
+<p>在 <code>/build.gradle</code> 中添加如下语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">     id <span class="string">&#x27;com.chaquo.python&#x27;</span> version <span class="string">&#x27;14.0.2&#x27;</span> apply <span class="literal">false</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在 <code>/app/src/build.gradle</code> 中添加如下语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">     id <span class="string">&#x27;com.android.application&#x27;</span></span><br><span class="line">     id <span class="string">&#x27;com.chaquo.python&#x27;</span></span><br><span class="line"> &#125;   </span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在 <code>/app/src/build.gradle</code> 中的 <code>android</code> 中添加如下语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">defaultConfig &#123;</span><br><span class="line">    ndk &#123;</span><br><span class="line">    abiFilters <span class="string">&quot;armeabi-v7a&quot;</span>, <span class="string">&quot;arm64-v8a&quot;</span>, <span class="string">&quot;x86&quot;</span>, <span class="string">&quot;x86_64&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    python&#123;</span><br><span class="line">        version <span class="string">&quot;3.8&quot;</span> <span class="comment">//python版本，建议使用3.8</span></span><br><span class="line">        buildPython <span class="string">&quot;C:\\python.exe&quot;</span> <span class="comment">//设置python解释器位置，注意版本对应</span></span><br><span class="line">        pip&#123;</span><br><span class="line">            install <span class="string">&quot;libgen-api&quot;</span></span><br><span class="line">        &#125;<span class="comment">//安装python库，“libgen-api”是下载pdf所需要的库</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="调用python代码"><a class="markdownIt-Anchor" href="#调用python代码"></a> 调用Python代码</h2>
+<ol>
+<li>
+<p>启动Python环境：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!Python.isStarted()) &#123;</span><br><span class="line">    Python.start(<span class="keyword">new</span> <span class="title class_">AndroidPlatform</span>(<span class="built_in">this</span>));</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">python 代码</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>利用 <code>Java equivalent</code> 调用Python代码,详见 <a target="_blank" rel="noopener" href="https://chaquo.com/chaquopy/doc/current/java.html">Java API</a></p>
+</li>
+<li>
+<p>设置联网权限，在 <code>/app/src/main/AndroidManifest.xml</code> 中的 <code>manifest</code> 块中添加如下语句：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">&quot;android.permission.INTERNET&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">&quot;android.permission.ACCESS_NETWORK_STATE&quot;</span> /&gt;</span> </span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="测试代码"><a class="markdownIt-Anchor" href="#测试代码"></a> 测试代码</h2>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"><span class="keyword">import</span> com.chaquo.python.PyObject;</span><br><span class="line"><span class="keyword">import</span> com.chaquo.python.Python;</span><br><span class="line"><span class="keyword">import</span> com.chaquo.python.android.AndroidPlatform;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        <span class="keyword">if</span> (!Python.isStarted()) &#123;</span><br><span class="line">            Python.start(<span class="keyword">new</span> <span class="title class_">AndroidPlatform</span>(<span class="built_in">this</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(Python.isStarted())&#123;</span><br><span class="line">            Toast.makeText(MainActivity.<span class="built_in">this</span>, <span class="string">&quot;this is debug message！&quot;</span>, <span class="number">5000</span>).show();</span><br><span class="line">            System.out.println(<span class="string">&quot;This is debug msg!&quot;</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Python</span> <span class="variable">py</span> <span class="operator">=</span> Python.getInstance();   <span class="comment">//获得Python实例</span></span><br><span class="line">        <span class="type">PyObject</span> <span class="variable">libgen_api</span> <span class="operator">=</span> py.getModule(<span class="string">&quot;libgen_api&quot;</span>); <span class="comment">//import libgen_api</span></span><br><span class="line">        <span class="type">PyObject</span> <span class="variable">libgen</span> <span class="operator">=</span> libgen_api.callAttr(<span class="string">&quot;LibgenSearch&quot;</span>); <span class="comment">//调用libgen_api.LibgenSearch()</span></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="type">PyObject</span> <span class="variable">result</span> <span class="operator">=</span> libgen.callAttr(<span class="string">&quot;search_author&quot;</span>,<span class="string">&quot;Jane Austen&quot;</span>);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (RuntimeException runtimeException)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;网络异常&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//测试时请连接VPN</span></span><br><span class="line">        <span class="comment">//虚拟机可能有网络问题，建议使用真实机</span></span><br><span class="line">        <span class="comment">//可通过Android Studio 下方 Logcat 选项卡查看输出。</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考资料"><a class="markdownIt-Anchor" href="#参考资料"></a> 参考资料</h2>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://chaquo.com/chaquopy/doc/current/android.html">Gradle Plugin</a></li>
+<li><a target="_blank" rel="noopener" href="https://chaquo.com/chaquopy/doc/current/java.html">Java API</a></li>
+<li><a target="_blank" rel="noopener" href="https://chaquo.com/chaquopy/doc/current/java/com/chaquo/python/Python.html">Class Python</a></li>
+</ol>
 
+      </div>
+      
+      
+      
     </div>
+    
 
     
     
     
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E9%A9%BE%E9%A9%B6/" rel="tag"># 驾驶</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2023/4/" rel="prev" title="数据库系统概念（part3）">
-      <i class="fa fa-chevron-left"></i> 数据库系统概念（part3）
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/7/" rel="next" title="Unity2d问题记录">
-      Unity2d问题记录 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
 
 
           </div>
@@ -364,7 +292,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E8%BD%AC%E9%80%9F%E5%8D%87%E6%8C%A1"><span class="nav-number">1.</span> <span class="nav-text"> 高转速升挡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8E%E8%BD%AC%E9%80%9F%E9%99%8D%E6%8C%A1%E8%A1%A5%E6%B2%B9"><span class="nav-number">2.</span> <span class="nav-text"> 低转速降挡补油</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%8A%A8%E6%9C%BA%E8%BD%AC%E9%80%9F%E4%B8%8E%E6%B1%BD%E8%BD%A6%E8%A1%8C%E9%A9%B6%E9%80%9F%E5%BA%A6%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text"> 发动机转速与汽车行驶速度之间的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E7%82%B9%E9%A2%98%E5%A4%96%E8%AF%9D%E7%A6%BB%E5%90%88%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text"> 一点题外话：离合器的使用</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85chaquopy"><span class="nav-number">1.</span> <span class="nav-text"> 安装Chaquopy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8python%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text"> 调用Python代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text"> 测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text"> 参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -380,20 +308,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

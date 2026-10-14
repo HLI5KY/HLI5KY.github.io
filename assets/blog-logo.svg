@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">青鸟与哥特长剑</title>
+  <desc id="logo-desc">红色背景上，一只闭口收翼的青鸟停在倾斜的灰色哥特长剑护手上。剑尖隐入地面，白色裂纹呈扇形向外延展。</desc>
+  <defs>
+    <clipPath id="above-ground"><path d="M0 0H1024V676L550 675 510 678 486 675 463 682 444 675 0 676Z"/></clipPath>
+  </defs>
+  <path id="background" fill="#CF2E2E" d="M0 0H1024V1024H0Z"/>
+
+  <!-- Broad, angular fissures; fewer branches keep the mark clear at small sizes. -->
+  <g id="ground-cracks" fill="none" stroke="#FFF" stroke-linecap="butt" stroke-linejoin="miter">
+    <path stroke-width="9" d="M474 675 438 698 420 731 435 766 417 804 448 841 443 880 487 914 520 963
+      M467 679 397 681 354 704 326 731 286 737 253 773 211 784 178 818 191 857 161 895
+      M487 679 520 703 509 734 542 765 580 771 609 800 651 808 689 840 736 854 755 892
+      M506 680 563 697 604 729 642 747 701 750 747 775 794 786 825 823 872 847 902 881
+      M354 704 307 717 256 720 219 704 171 708 138 730 95 730
+      M604 729 628 695 667 687 698 703 734 700
+      M253 773 284 797 329 794 366 776 398 779 417 804
+      M284 797 272 838 299 865 286 906
+      M580 771 566 816 594 845 575 876 592 914
+      M651 808 638 851 674 887 667 928
+      M747 775 771 750 822 755 857 780 902 790"/>
+    <path stroke-width="6" d="M397 681 367 666 328 669 306 652 268 658
+      M520 703 552 676 583 674
+      M326 731 316 704 337 686
+      M211 784 166 784 126 807 101 807
+      M329 794 338 832 368 850 364 878
+      M443 880 409 899 387 930
+      M594 845 553 853 529 880
+      M701 750 715 723 750 714
+      M794 786 790 821 819 847 811 869
+      M487 914 458 926 436 946"/>
+  </g>
+  <!-- Tapered ends, without round caps or floating rock shapes. -->
+  <g id="crack-tips" fill="#FFF">
+    <path d="M96 727 48 745 96 733ZM103 804 54 832 105 810ZM164 892 143 933 158 898ZM289 905 276 939 283 905ZM365 875 352 901 368 877ZM389 928 371 952 384 931ZM517 963 535 985 523 961ZM590 914 610 945 595 912ZM664 927 683 958 670 927ZM752 892 777 921 758 890ZM899 882 934 911 905 879ZM901 787 963 808 900 793ZM732 697 770 688 733 703ZM749 711 782 702 751 717ZM582 671 616 660 583 677ZM269 655 238 652 268 661ZM434 946 412 961 438 944Z"/>
+  </g>
+
+  <!-- The blade is clipped by the ground, so its buried end is never outlined. -->
+  <g id="gothic-sword" clip-path="url(#above-ground)">
+    <g transform="rotate(16 480 680)">
+      <path id="blade" d="M451 285 509 285 497 713 463 713Z" fill="#919BA3" stroke="#FFF" stroke-width="9" stroke-linejoin="miter"/>
+      <path id="blade-light" d="M451 291 480 279 480 713 463 713Z" fill="#C5CDD2"/>
+      <path id="blade-edge" d="M451 291 463 713M509 291 497 713" fill="none" stroke="#FFF" stroke-width="9"/>
+      <path id="grip" d="M467 170H493L497 277H463Z" fill="#919BA3" stroke="#FFF" stroke-width="8"/>
+      <path d="M468 175H480V274H464Z" fill="#C5CDD2"/>
+      <path id="pommel" d="M480 84C474 101 458 108 459 126 442 115 430 124 425 139 445 133 460 148 464 165H496C500 148 515 133 535 139 530 124 518 115 501 126 502 108 486 101 480 84Z" fill="#919BA3" stroke="#FFF" stroke-width="8" stroke-linejoin="miter"/>
+      <path d="M480 94C471 109 463 115 465 130L480 152Z" fill="#C5CDD2"/>
+      <path d="M461 165H499V181H461Z" fill="#919BA3" stroke="#FFF" stroke-width="6"/>
+      <path id="crossguard" d="M480 269C446 274 415 274 390 269 369 264 358 250 365 232 347 236 337 247 339 261 326 260 318 249 305 249 308 263 318 278 332 283 323 296 329 310 339 318 340 300 354 291 373 292L454 299 480 313 506 299 587 292C606 291 620 300 621 318 631 310 637 296 628 283 642 278 652 263 655 249 642 249 634 260 621 261 623 247 613 236 595 232 602 250 591 264 570 269 545 274 514 274 480 269Z" fill="#919BA3" stroke="#FFF" stroke-width="8" stroke-linejoin="miter"/>
+      <path d="M362 278C400 284 443 284 480 278L480 304 455 292 374 285C355 284 343 291 338 302 338 290 347 282 362 278Z" fill="#C5CDD2"/>
+    </g>
+  </g>
+
+  <!-- Closed beak and folded wing; blue shapes have no white outline. -->
+  <g id="bluebird" transform="translate(638 238)">
+    <path d="M53 65 54 78 60 81M69 64 72 79 78 82" fill="none" stroke="#20B8DF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 59C17 58 28 51 39 39 49 28 53 21 57 12 61 3 71 0 80 3 85 5 88 9 90 12L103 13 90 19C88 29 86 40 79 50 71 63 60 70 45 69 33 69 26 64 21 63L2 66 13 59Z" fill="#20B8DF"/>
+    <path d="M29 51C40 43 47 29 59 27 68 25 75 30 72 38 68 49 55 55 39 55L25 55Z" fill="#078DBB"/>
+  </g>
+</svg>

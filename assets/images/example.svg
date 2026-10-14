@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+  <rect width="640" height="200" fill="#fdf4f3"/>
+  <rect x="0" y="0" width="8" height="200" fill="#d93b30"/>
+  <text x="48" y="96" font-family="Georgia, serif" font-size="40" fill="#d93b30">示例图片</text>
+  <text x="48" y="136" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#8b9099">assets/images/example.svg</text>
+</svg>

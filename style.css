@@ -1,0 +1,306 @@
+/* =========================================================
+   style.css —— 红白主题
+   改配色只需改下面的变量，其余样式都会跟着变。
+   ========================================================= */
+
+:root {
+  --red: #d93b30;          /* 主色：红 */
+  --red-dark: #b32b22;     /* 悬停/强调 */
+  --red-soft: #fdf4f3;     /* 浅红底（代码、引用、标签） */
+  --red-line: #f0d6d3;     /* 浅红描边 */
+
+  --ink: #1f2124;          /* 正文 */
+  --ink-soft: #55585e;     /* 次级文字 */
+  --muted: #8b9099;        /* 日期、页码等 */
+  --line: #ececee;         /* 分隔线 */
+
+  --bg: #ffffff;
+  /* 内容宽度。原来 760px 时两侧留白偏多，加宽到 1100px 后
+     常见屏宽下左右留白大致减半，观感更接近「铺满」。 */
+  --wrap: 1100px;
+
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --serif: Georgia, "Songti SC", "SimSun", serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+/* 页脚要贴页面底部：body 竖排 flex，让主内容吃掉剩余高度，
+   内容再短页脚也不会浮在半空中 */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.78;
+}
+
+/* 它是 body 的 flex 子项，而 .wrap 带着 margin:0 auto —— 按规范，
+   有 auto 交叉轴外边距的 flex 子项不会被拉伸填满，宽度会退化成「按内容收缩」，
+   比 max-width 窄得多。显式给 100% 才能让 max-width 生效、再由 auto 外边距居中。 */
+main {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+a { color: var(--red); text-decoration: none; }
+a:hover { color: var(--red-dark); text-decoration: underline; }
+
+/* ---------- 顶栏 ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* 站标：用 assets/logo.png，换图只改这张图即可 */
+.brand { display: inline-flex; align-items: center; }
+.brand img {
+  display: block;
+  /* 手写横条字标：定高度、宽度自然展开 */
+  height: 38px;
+  width: auto;
+}
+.brand:hover { text-decoration: none; opacity: .8; }
+
+.nav { display: flex; gap: 22px; }
+.nav a {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+.nav a:hover { color: var(--red); text-decoration: none; }
+.nav a.is-active { color: var(--red); font-weight: 600; }
+
+/* ---------- 首页 ---------- */
+
+/* 首页横幅：站名靠顶栏的 logo 表达，这里只留一句说明 */
+.hero {
+  padding: 30px 0 24px;
+  border-bottom: 3px solid var(--red);
+}
+
+.hero-sub {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
+.year {
+  margin: 44px 0 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  color: var(--red);
+}
+
+.post-item {
+  padding: 20px 0 22px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.post-item-title {
+  display: block;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.post-item-title:hover { color: var(--red); text-decoration: none; }
+
+.post-item-date {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-right: 10px;
+}
+
+.post-item-summary {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+}
+
+.empty {
+  padding: 48px 0;
+  color: var(--muted);
+}
+
+/* ---------- 标签 ---------- */
+
+.tag {
+  display: inline-block;
+  margin: 0 6px 0 0;
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: var(--red-soft);
+  border: 1px solid var(--red-line);
+  color: var(--red);
+  font-size: 12px;
+  line-height: 1.7;
+  vertical-align: middle;
+}
+.tag:hover { background: var(--red); color: #fff; border-color: var(--red); text-decoration: none; }
+
+/* ---------- 文章页 ---------- */
+
+.post, .page { padding: 52px 0 40px; }
+
+.post-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 31px;
+  line-height: 1.36;
+}
+
+.post-meta {
+  margin: 14px 0 0;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+.post-meta time { margin-right: 12px; font-family: var(--mono); }
+
+.page .post-header { margin-bottom: 22px; }
+.page .post-title { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+
+.post-footer {
+  margin-top: 56px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+/* ---------- 正文排版 ---------- */
+
+.content { margin-top: 30px; }
+
+.content h2, .content h3, .content h4 {
+  margin: 40px 0 14px;
+  line-height: 1.4;
+}
+.content h2 {
+  font-size: 22px;
+  padding-left: 12px;
+  border-left: 4px solid var(--red);
+}
+.content h3 { font-size: 18px; }
+.content h4 { font-size: 16px; color: var(--ink-soft); }
+
+.content p { margin: 16px 0; }
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px 0;
+  border-radius: 8px;
+}
+
+.content .md-video {
+  display: block;
+  width: 100%;
+  margin: 24px 0;
+  border-radius: 8px;
+  background: #000;
+}
+
+.content ul, .content ol { padding-left: 26px; margin: 16px 0; }
+.content li { margin: 6px 0; }
+
+.content blockquote {
+  margin: 22px 0;
+  padding: 2px 18px;
+  border-left: 3px solid var(--red);
+  background: var(--red-soft);
+  color: var(--ink-soft);
+  border-radius: 0 6px 6px 0;
+}
+.content blockquote p { margin: 12px 0; }
+
+.content code {
+  font-family: var(--mono);
+  font-size: 87%;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--red-soft);
+  color: var(--red-dark);
+}
+
+.content pre {
+  margin: 22px 0;
+  padding: 16px 18px;
+  overflow-x: auto;
+  background: #fbfbfc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  line-height: 1.65;
+}
+.content pre code {
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 13.5px;
+}
+
+.content hr {
+  margin: 36px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.content table {
+  width: 100%;
+  margin: 22px 0;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+.content th, .content td {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.content th { background: var(--red-soft); color: var(--red-dark); font-weight: 600; }
+
+/* ---------- 页脚 ---------- */
+
+.site-footer {
+  flex: none;
+  margin-top: 60px;
+  border-top: 1px solid var(--line);
+  padding: 30px 0 40px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- 窄屏 ---------- */
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 9px; }
+  .hero { padding: 24px 0 20px; }
+  .post-title { font-size: 24px; }
+  .post, .page { padding: 36px 0 28px; }
+  .nav { gap: 16px; }
+}
